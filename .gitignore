@@ -1,0 +1,7 @@
+/out/
+/target/
+/shelf/
+/workspace.xml
+.idea/
+*.iml
+*.json
