@@ -8,7 +8,7 @@ build app:
     before_script:
         - mvn -v
     script:
-        - mvn clean package -DskipTests
+        - mvn clean package -DskipTests -e
     artifacts:
         paths:
             - target/*.war
