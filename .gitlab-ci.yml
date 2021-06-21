@@ -1,0 +1,16 @@
+stages:
+    - build war
+#    - build docker
+#    - public docker
+
+
+build app:
+    before_script:
+        - mvn -v
+    script:
+        - mvn clean package -DskipTests
+    artifacts:
+        paths:
+            - target/*.war
+        expire_in: 1 day
+    stage: build war
