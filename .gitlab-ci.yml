@@ -1,6 +1,6 @@
 stages:
-    - build war
-#    - build docker
+    - build jar
+    - build docker
 #    - public docker
 
 
@@ -11,6 +11,15 @@ build app:
         - mvn clean package -DskipTests -e
     artifacts:
         paths:
-            - target/*.war
+            - target/*.jar
         expire_in: 1 day
-    stage: build war
+    stage: build jar
+    only:
+        - merge_request
+
+build docker:
+    script:
+        - docker build -t docker.trainee.ru.com/group10-back .
+    stage: build docker
+    only: 
+        - merge_request
