@@ -11,6 +11,6 @@ build app:
         - mvn clean package -DskipTests -e
     artifacts:
         paths:
-            - target/*.war
+            - target/*.jar
         expire_in: 1 day
     stage: build war
