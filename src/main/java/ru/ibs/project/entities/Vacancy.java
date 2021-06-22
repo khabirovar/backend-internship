@@ -16,4 +16,5 @@ public class Vacancy {
     private Long id;
     private String name;
     private String area;
+//    private String items;
 }
