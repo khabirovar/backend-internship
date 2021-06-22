@@ -14,12 +14,8 @@ build app:
             - target/*.jar
         expire_in: 1 day
     stage: build jar
-    only:
-        - merge_request
-
+    
 build docker:
     script:
         - docker build -t docker.trainee.ru.com/group10-back .
     stage: build docker
-    only: 
-        - merge_request
