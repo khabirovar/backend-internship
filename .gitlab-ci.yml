@@ -1,6 +1,6 @@
 stages:
-    - build war
-#    - build docker
+    - build jar
+    - build docker
 #    - public docker
 
 
@@ -13,4 +13,9 @@ build app:
         paths:
             - target/*.jar
         expire_in: 1 day
-    stage: build war
+    stage: build jar
+
+build docker:
+    script:
+        - docker build -t docker.trainee.ru.com/group10-back .
+    stage: build docker
