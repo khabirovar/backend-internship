@@ -1,4 +1,4 @@
-FROM openjdk:7 #tomcat:9.0-jdk11-adoptopenjdk-hotspot
+FROM openjdk:7
 
 WORKDIR /opt/app 
 
