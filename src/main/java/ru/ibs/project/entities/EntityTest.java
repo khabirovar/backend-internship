@@ -13,6 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 public class EntityTest {  //это сущьность для мапинга из стороннего API
     Integer found;
+    Integer pages;
+    Integer per_page;
+    Integer page;
     List<Item> items;
-    List<Error> errors;
+    List<Error> errors;  // Не нужно??
+
 }

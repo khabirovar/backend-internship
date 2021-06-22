@@ -16,5 +16,5 @@ public class Item {  //это сущьность для мапинга из ст
     String name;
     Area area;
     Salary salary;
-
+    Employer employer;
 }

@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Area { //это сущьность для мапинга из стороннего API
-    Integer id;
+public class Experience {
     String name;
 }
