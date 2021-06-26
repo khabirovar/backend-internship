@@ -101,8 +101,8 @@ push helm:
 
 deploy helm:
     before_script:
-        - export version=$(echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-')
-        - export PROJECT_VERSION=$(echo "$version.0" )
+        - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' )
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
         - export EXPOSE_PORT=$(grep EXPOSE Dockerfile | cut -f2 -d' ')
     script:
