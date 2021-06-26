@@ -21,6 +21,7 @@ check variables:
         - export PROJECT_VERSION=$(echo $version | rev | cut -d'.' -f2- | rev)
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
+        - echo "version is $version"
         - echo "project version is ${PROJECT_VERSION}"
         - echo "project group is ${PROJECT_GROUP}"
         - echo "project name is ${PROJECT_NAME}"
