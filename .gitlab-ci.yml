@@ -45,6 +45,7 @@ build image:
         - export PROJECT_VERSION=$(echo $version | cut -f 1,2,3 -d. | tr '[:upper:]' '[:lower:]')
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
+        - echo project name is ${PROJECT_NAME}
         - docker build -t ${DOCKER_REPO}/{PROJECT_NAME}:${PROJECT_VERSION} .    
     stage: build image
     dependencies: [build jar]
