@@ -76,7 +76,7 @@ build helm:
         - sed -i "s/CI_PROJECT_NAME/${PROJECT_NAME}/g" env/values.yaml
         - sed -i "s/CI_PROJECT_NAME/${PROJECT_NAME}/g" env/service.yaml
         - sed -i "s/CI_PROJECT_NAME/${PROJECT_NAME}/g" env/deployment.yaml
-        - sed -i "s/0.1.0/${PROJECT_VERSION}/g" ${PROJECT_NAME}/Chart.yaml
+        - sed -i "s/0.1.0/\"${PROJECT_VERSION}\"/g" ${PROJECT_NAME}/Chart.yaml
         - sed -i "s/0.1.0/${PROJECT_VERSION}/g" env/values.yaml
         - cp env/values.yaml ${PROJECT_NAME}/values.yaml
         - cp env/service.yaml ${PROJECT_NAME}/templates/service.yaml
