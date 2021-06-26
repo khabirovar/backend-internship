@@ -71,6 +71,7 @@ build helm:
     script:
         - helm create ${PROJECT_NAME}
         - echo "EXPOSE_PORT is ${EXPOSE_PORT}"
+        - echo "project version is ${PROJECT_VERSION}"
         - sed -i "s/EXPOSE_PORT/${EXPOSE_PORT}/g" env/values.yaml
         - sed -i "s/CI_PROJECT_NAME/${PROJECT_NAME}/g" env/values.yaml
         - sed -i "s/CI_PROJECT_NAME/${PROJECT_NAME}/g" env/service.yaml
