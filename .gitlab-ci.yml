@@ -111,4 +111,4 @@ deploy helm:
         - helm repo update
         #- helm uninstall ${PROJECT_NAME} --namespace ${PROJECT_GROUP}
         - helm upgrade --install ${PROJECT_NAME} --namespace ${PROJECT_GROUP} ${HELM_REPO}/${PROJECT_NAME} --wait
-    stage: deploy helm 
+    stage: deploy helm
