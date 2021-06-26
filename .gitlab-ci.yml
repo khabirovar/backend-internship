@@ -30,7 +30,7 @@ check variables:
 build jar:
     before_script:
         - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' )
+        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' | sed "s/-/./g")
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
         - mvn clean package -DskipTests -e
@@ -43,7 +43,7 @@ build jar:
 build image:
     before_script:
         - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' )
+        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' | sed "s/-/./g")
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
         - echo project name is ${PROJECT_NAME}
@@ -54,7 +54,7 @@ build image:
 push image:
     before_script:
         - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' )
+        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' | sed "s/-/./g")
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
         - docker login ${DOCKER_REPO} -u "${NEXUS_USER}" -p "${NEXUS_PASSWORD}"
@@ -65,7 +65,7 @@ push image:
 build helm:
     before_script:
         - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' )
+        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' | sed "s/-/./g")
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
         - export EXPOSE_PORT=$(grep EXPOSE Dockerfile | cut -f2 -d' ')
     script:
@@ -93,7 +93,7 @@ build helm:
 push helm:
     before_script:
         - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' )
+        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' | sed "s/-/./g")
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
         - export EXPOSE_PORT=$(grep EXPOSE Dockerfile | cut -f2 -d' ')
     script:
@@ -104,7 +104,7 @@ push helm:
 deploy helm:
     before_script:
         - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' )
+        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' | sed "s/-/./g")
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
         - helm repo add ${HELM_REPO} ${HELM_REPO_URL}
