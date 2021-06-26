@@ -1,12 +1,37 @@
 stages:
+    - check variables
     - build jar
-    - build docker
-#    - public docker
+    - build image
+    - push image 
+    - build helm
+    - push helm
+    - deploy helm
+
+variables:
+    PROJECT_NAME: group10-back
+    DOCKER_REPO: docker.trainee.ru.com
+    HELM_REPO: helm-group10-front
+    HELM_REPO_URL: https://repo.trainee.ru.com/repository/helm
+    HELM_EXPERIMENTAL_OCI: 1
 
 
-build app:
+check variables:
     before_script:
-        - mvn -v
+        - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        - export PROJECT_VERSION=$(echo $version | sed "s/-/./g" | rev | cut -d'.' -f2- | rev)
+        - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
+    script:
+        - echo "version is $version"
+        - echo "project version is ${PROJECT_VERSION}"
+        - echo "project group is ${PROJECT_GROUP}"
+        - echo "project name is ${PROJECT_NAME}"
+    stage: check variables
+
+build jar:
+    before_script:
+        - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        - export PROJECT_VERSION=$(echo $version | sed "s/-/./g" | rev | cut -d'.' -f2- | rev)
+        - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
         - mvn clean package -DskipTests -e
     artifacts:
@@ -15,7 +40,76 @@ build app:
         expire_in: 1 day
     stage: build jar
     
-build docker:
+build image:
+    before_script:
+        - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        - export PROJECT_VERSION=$(echo $version | sed "s/-/./g" | rev | cut -d'.' -f2- | rev)
+        - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
-        - docker build -t docker.trainee.ru.com/group10-back .
-    stage: build docker
+        - echo project name is ${PROJECT_NAME}
+        - docker build -t ${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION} .    
+    stage: build image
+    dependencies: [build jar]
+
+push image:
+    before_script:
+        - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        - export PROJECT_VERSION=$(echo $version | sed "s/-/./g" | rev | cut -d'.' -f2- | rev)
+        - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
+    script:
+        - docker login ${DOCKER_REPO} -u "${NEXUS_USER}" -p "${NEXUS_PASSWORD}"
+        - docker push -a ${DOCKER_REPO}/${PROJECT_NAME}
+        - docker rmi "${DOCKER_REPO}/${PROJECT_NAME}:${PROJECT_VERSION}"
+    stage: push image
+
+build helm:
+    before_script:
+        - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        - export PROJECT_VERSION=$(echo $version | sed "s/-/./g" | rev | cut -d'.' -f2- | rev)
+        - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
+        - export EXPOSE_PORT=$(grep EXPOSE Dockerfile | cut -f2 -d' ')
+    script:
+        - helm create ${PROJECT_NAME}
+        - echo "EXPOSE_PORT is ${EXPOSE_PORT}"
+        - echo "project version is ${PROJECT_VERSION}"
+        - sed -i "s/EXPOSE_PORT/${EXPOSE_PORT}/g" env/values.yaml
+        - sed -i "s/CI_PROJECT_NAME/${PROJECT_NAME}/g" env/values.yaml
+        - sed -i "s/CI_PROJECT_NAME/${PROJECT_NAME}/g" env/service.yaml
+        - sed -i "s/CI_PROJECT_NAME/${PROJECT_NAME}/g" env/deployment.yaml
+        - sed -i "s/0.1.0/\"${PROJECT_VERSION}\"/g" ${PROJECT_NAME}/Chart.yaml
+        - sed -i "s/0.1.0/${PROJECT_VERSION}/g" env/values.yaml
+        - cp env/values.yaml ${PROJECT_NAME}/values.yaml
+        - cp env/service.yaml ${PROJECT_NAME}/templates/service.yaml
+        - cp env/deployment.yaml ${PROJECT_NAME}/templates/deployment.yaml
+        - helm repo add ${HELM_REPO} ${HELM_REPO_URL}
+        - helm lint ${PROJECT_NAME}
+        - helm package ${PROJECT_NAME}
+    artifacts:
+        paths:
+            - "*.tgz"
+        expire_in: 1 day
+    stage: build helm
+
+push helm:
+    before_script:
+        - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        - export PROJECT_VERSION=$(echo $version | sed "s/-/./g" | rev | cut -d'.' -f2- | rev)
+        - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
+        - export EXPOSE_PORT=$(grep EXPOSE Dockerfile | cut -f2 -d' ')
+    script:
+        - helm nexus-push ${HELM_REPO} ${PROJECT_NAME}-${PROJECT_VERSION}.tgz --username ${NEXUS_USER} --password ${NEXUS_PASSWORD}
+    stage: push helm
+    dependencies: [build helm]
+
+deploy helm:
+    before_script:
+        - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+        - export PROJECT_VERSION=$(echo $version | sed "s/-/./g" | rev | cut -d'.' -f2- | rev)
+        - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
+    script:
+        - helm repo add ${HELM_REPO} ${HELM_REPO_URL}
+        - helm nexus-push ${HELM_REPO} login --username ${NEXUS_USER} --password ${NEXUS_PASSWORD}
+        - helm repo update
+        #- helm uninstall ${PROJECT_NAME} --namespace ${PROJECT_GROUP}
+        - helm --debug upgrade --install ${PROJECT_NAME} --namespace ${PROJECT_GROUP} ${HELM_REPO}/${PROJECT_NAME} --wait
+    stage: deploy helm
