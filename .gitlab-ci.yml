@@ -17,7 +17,7 @@ variables:
 
 check variables:
     before_script:
-        - export version=echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-' 
+        - export version=$(echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-')
         - export PROJECT_VERSION=$(echo "$version.0" )
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
@@ -29,7 +29,7 @@ check variables:
 
 build jar:
     before_script:
-        - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) 
+        - export version=$(echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-')
         - export PROJECT_VERSION=$(echo $version | cut -f1 -d'-')
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
@@ -42,7 +42,7 @@ build jar:
     
 build image:
     before_script:
-        - export version=echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-' 
+        - export version=$(echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-')
         - export PROJECT_VERSION=$(echo "$version.0" )
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
@@ -53,7 +53,7 @@ build image:
 
 push image:
     before_script:
-        - export version=echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-' 
+        - export version=$(echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-')
         - export PROJECT_VERSION=$(echo "$version.0" )
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
@@ -64,7 +64,7 @@ push image:
 
 build helm:
     before_script:
-        - export version=echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-' 
+        - export version=$(echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-')
         - export PROJECT_VERSION=$(echo "$version.0" )
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
         - export EXPOSE_PORT=$(grep EXPOSE Dockerfile | cut -f2 -d' ')
@@ -90,7 +90,7 @@ build helm:
 
 push helm:
     before_script:
-        - export version=echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-' 
+        - export version=$(echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-')
         - export PROJECT_VERSION=$(echo "$version.0" )
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
         - export EXPOSE_PORT=$(grep EXPOSE Dockerfile | cut -f2 -d' ')
@@ -101,7 +101,7 @@ push helm:
 
 deploy helm:
     before_script:
-        - export version=echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-' 
+        - export version=$(echo $(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec) | cut -f1 -d'-')
         - export PROJECT_VERSION=$(echo "$version.0" )
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
         - export EXPOSE_PORT=$(grep EXPOSE Dockerfile | cut -f2 -d' ')
