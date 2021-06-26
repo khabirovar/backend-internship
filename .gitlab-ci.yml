@@ -18,7 +18,7 @@ variables:
 check variables:
     before_script:
         - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' )
+        - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' | sed "s/-/./g")
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
         - echo "version is $version"
@@ -106,7 +106,6 @@ deploy helm:
         - export version=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
         - export PROJECT_VERSION=$(echo $version | tr '[:upper:]' '[:lower:]' )
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
-        - export EXPOSE_PORT=$(grep EXPOSE Dockerfile | cut -f2 -d' ')
     script:
         - helm repo add ${HELM_REPO} ${HELM_REPO_URL}
         - helm nexus-push ${HELM_REPO} login --username ${NEXUS_USER} --password ${NEXUS_PASSWORD}
