@@ -3,9 +3,9 @@ stages:
     - build jar
     - build image
     - push image 
- #   - build helm
- #   - push helm
- #   - deploy helm
+    - build helm
+    - push helm
+    - deploy helm
 
 variables:
     PROJECT_NAME: group10-back
