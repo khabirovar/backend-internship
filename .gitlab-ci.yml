@@ -112,5 +112,5 @@ deploy helm:
         - helm nexus-push ${HELM_REPO} login --username ${NEXUS_USER} --password ${NEXUS_PASSWORD}
         - helm repo update
         #- helm uninstall ${PROJECT_NAME} --namespace ${PROJECT_GROUP}
-        - helm upgrade --install ${PROJECT_NAME} --namespace ${PROJECT_GROUP} ${HELM_REPO}/${PROJECT_NAME} --wait
+        - helm --debug upgrade --install ${PROJECT_NAME} --namespace ${PROJECT_GROUP} ${HELM_REPO}/${PROJECT_NAME} --wait
     stage: deploy helm
