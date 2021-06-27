@@ -1,15 +1,41 @@
 package ru.ibs.project.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@JsonIgnoreProperties(ignoreUnknown = true) //любые поля, не связанные с полями класса, должны быть проигнорированы.
+import javax.persistence.*;
+import java.util.Set;
+
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Area { //это сущьность для мапинга из стороннего API
-    Integer id;
-    String name;
+@Table(name = "area",
+        uniqueConstraints =
+                {@UniqueConstraint(columnNames = "name_area")}
+)
+public class Area extends EntityBase {
+
+    @Column(name = "name_area")
+    private String nameArea;
+
+    @Column(name = "name_region")
+    private String nameRegion;
+
+//    @OneToMany(
+//            mappedBy = "area",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true,
+//            fetch = FetchType.LAZY
+//    )
+//    private List<Vacancy> vacancies;
+
+    @OneToMany(mappedBy = "area",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private Set<VacancyArea> vacancyAreas;
+
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "area", orphanRemoval = true)
+//    private List<Vacancy> vacancies;
 }
