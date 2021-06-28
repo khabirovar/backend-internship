@@ -7,6 +7,7 @@ stages:
     - push helm
     - deploy helm
 
+
 variables:
     PROJECT_NAME: group10-back
     DOCKER_REPO: docker.trainee.ru.com
