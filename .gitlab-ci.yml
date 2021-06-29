@@ -34,7 +34,7 @@ build jar:
         - export PROJECT_VERSION=$(echo $version | sed "s/-/./g" | rev | cut -d'.' -f2- | rev)
         - export PROJECT_GROUP=$(echo ${CI_PROJECT_PATH} | cut -f 1 -d/)
     script:
-        - mvn clean package -DskipTests -e
+        - mvn clean package -DskipTests -e -l openshift
     artifacts:
         paths:
             - target/*.jar

@@ -17,6 +17,9 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+        <db.user>postgres</db.user>
+        <db.passwd>012345</db.passwd>
     </properties>
 
     <dependencies>
@@ -58,6 +61,25 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+                <db.user>postgres</db.user>
+                <db.passwd>O12345</db.passwd>
+            </properties>
+        </profile>
+        <profile>
+            <id>openshift</id>
+            <properties>
+                <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+                <db.user>postgres</db.user>
+                <db.passwd>O12345</db.passwd>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
