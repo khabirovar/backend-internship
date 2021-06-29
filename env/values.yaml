@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
     repository: docker.trainee.ru.com/CI_PROJECT_NAME
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     tag: "0.1.0"
 
 imagePullSecrets: []
