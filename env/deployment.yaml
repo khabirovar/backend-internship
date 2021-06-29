@@ -26,6 +26,22 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
+        - env:
+          - name: DB_URL
+            valueFrom:
+              secretKeyRef:
+                name: postgresql
+                key: db-url
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgresql
+                key: database-user
+          - name: DB_PASSWD
+            valueFrom:
+              secretKeyRef:
+                name: postgresql
+                key: database-password
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -48,23 +64,7 @@ spec:
             timeoutSeconds: 60
             periodSeconds: 100
           resources:
-        - env:
-          - name: DB_URL
-            valueFrom:
-              secretKeyRef:
-                name: postgresql
-                key: db-url
-          - name: DB_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgresql
-                key: database-user
-          - name: DB_PASSWD
-            valueFrom:
-              secretKeyRef:
-                name: postgresql
-                key: database-password
-        - {{- toYaml .Values.resources | nindent 2 }}
+            {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
