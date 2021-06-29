@@ -74,7 +74,7 @@
         <profile>
             <id>openshift</id>
             <properties>
-                <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+                <db.url>jdbc:postgresql://postgresql.group10.svc:5432/postgres</db.url>
                 <db.user>postgres</db.user>
                 <db.passwd>O12345</db.passwd>
             </properties>
