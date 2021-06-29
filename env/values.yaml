@@ -1,22 +1,5 @@
 replicaCount: 1
 
-env:
-    - name: DB_URL
-      valueFrom:
-        secretKeyRef:
-          name: postgresql
-          key: db-url
-    - name: DB_USER
-      valueFrom:
-        secretKeyRef:
-          name: postgresql
-          key: database-user
-    - name: DB_PASSWD
-      valueFrom:
-        secretKeyRef:
-          name: postgresql
-          key: database-password
-
 image:
     repository: docker.trainee.ru.com/CI_PROJECT_NAME
     pullPolicy: Always
