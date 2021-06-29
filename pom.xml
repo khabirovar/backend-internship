@@ -19,7 +19,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
         <db.user>postgres</db.user>
-        <db.passwd>012345</db.passwd>
+        <db.passwd>O12345</db.passwd>
     </properties>
 
     <dependencies>
