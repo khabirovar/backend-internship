@@ -13,4 +13,6 @@ USER 65534
 
 ENV PATH=$PATH:/opt/app
 
+EXPOSE 8080
+
 CMD ["sh", "-c", "java ${JAVA_PARAM} -jar /opt/app/app.jar"]
