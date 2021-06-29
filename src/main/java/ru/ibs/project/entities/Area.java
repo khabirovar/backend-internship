@@ -1,14 +1,15 @@
 package ru.ibs.project.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "area",
@@ -18,7 +19,7 @@ import java.util.Set;
 public class Area extends EntityBase {
 
     @Column(name = "name_area")
-    private String nameArea;
+    private String nameArea;  //!!исправить на nameCity
 
     @Column(name = "name_region")
     private String nameRegion;
@@ -38,4 +39,29 @@ public class Area extends EntityBase {
 
 //    @OneToMany(cascade = CascadeType.ALL, mappedBy = "area", orphanRemoval = true)
 //    private List<Vacancy> vacancies;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Area area = (Area) o;
+        return Objects.equals(nameArea, area.nameArea) &&
+                Objects.equals(nameRegion, area.nameRegion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), nameArea, nameRegion);
+    }
+
+    @Override
+    public String toString() {
+        return "Area{" +
+                "nameArea='" + nameArea + '\'' +
+                ", nameRegion='" + nameRegion + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }

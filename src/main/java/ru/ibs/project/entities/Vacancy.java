@@ -1,14 +1,15 @@
 package ru.ibs.project.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "vacancy",
@@ -57,4 +58,26 @@ public class Vacancy extends EntityBase {
 //    @JoinColumn( name = "AREA_ID", referencedColumnName = "ID")
 //    private Area area;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Vacancy vacancy = (Vacancy) o;
+        return Objects.equals(nameVacancy, vacancy.nameVacancy);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), nameVacancy);
+    }
+
+    @Override
+    public String toString() {
+        return "Vacancy{" +
+                "nameVacancy='" + nameVacancy + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }

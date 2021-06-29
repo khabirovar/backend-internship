@@ -11,14 +11,19 @@ import ru.ibs.project.services.interfaces.DeleteService;
 @Service
 public class DeleteServiceImpl implements DeleteService {
 
-    @Autowired
     private VacancyRepository vacancyRepository;
 
-    @Autowired
     private AreaRepository areaRepository;
 
-    @Autowired
     private VacancyAreaRepository vacancyAreaRepository;
+
+    @Autowired
+    public DeleteServiceImpl(VacancyRepository vacancyRepository,
+                             AreaRepository areaRepository, VacancyAreaRepository vacancyAreaRepository) {
+        this.vacancyRepository = vacancyRepository;
+        this.areaRepository = areaRepository;
+        this.vacancyAreaRepository = vacancyAreaRepository;
+    }
 
     @Override
     @Transactional

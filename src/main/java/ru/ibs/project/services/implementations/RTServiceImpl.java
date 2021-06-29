@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,8 +16,6 @@ import ru.ibs.project.dto.hhDTO.respDictionaryDTOs.RegionDTO;
 import ru.ibs.project.dto.hhDTO.respDictionaryDTOs.ResponseCountryDictionaryHHDTO;
 import ru.ibs.project.dto.hhDTO.respDictionaryDTOs.ResponseCountryHHDTO;
 import ru.ibs.project.dto.hhDTO.respVacancyDTOs.ResponseVacancyHHDTO;
-import ru.ibs.project.entities.Area;
-import ru.ibs.project.entities.Vacancy;
 import ru.ibs.project.exceptions.MyException;
 import ru.ibs.project.services.interfaces.RTService;
 
@@ -67,6 +64,7 @@ public class RTServiceImpl implements RTService {
 
         if (downloadRequestDTO.getOnlyWithSalary())
             url += "&only_with_salary=true";
+
         ResponseVacanciesHHDTO responseVacanciesHHDTO = restTemplate.getForObject(url, ResponseVacanciesHHDTO.class);
         if (responseVacanciesHHDTO.getFound() == 0)
             throw new MyException("this vacancy doesn't exist");
@@ -92,7 +90,7 @@ public class RTServiceImpl implements RTService {
     @Override
     public String readRegion(String nameArea) {
 //        String urlDictionary = "https://api.hh.ru/areas/";
-        if (nameArea.equals("Санкт-Петербург")|| nameArea.equals("Москва"))
+        if (nameArea.equals("Санкт-Петербург") || nameArea.equals("Москва"))
             return nameArea;
         List<Long> countryIds = new ArrayList<>();
         String jsonAreaArray = restTemplate.getForObject(URL_DICTIONARY, String.class);
@@ -101,13 +99,9 @@ public class RTServiceImpl implements RTService {
                     objectMapper.readValue(jsonAreaArray,
                             new TypeReference<List<ResponseCountryDictionaryHHDTO>>() {
                             });
-
             listResponseCountryDictionaryHHDTO.forEach(responseCountryDictionaryHHDTO -> {
                 countryIds.add(responseCountryDictionaryHHDTO.getId());
             });
-//            for (ResponseCountryDictionaryHHDTO responseCountryDictionaryHHDTO : listResponseCountryDictionaryHHDTO) {
-//                countryIds.add(responseCountryDictionaryHHDTO.getId());
-//            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
