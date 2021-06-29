@@ -48,7 +48,7 @@ spec:
             timeoutSeconds: 60
             periodSeconds: 100
           resources:
-          env:
+          - env:
             - name: DB_URL
               valueFrom:
                 secretKeyRef:
