@@ -15,4 +15,4 @@ ENV PATH=$PATH:/opt/app
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "java ${JAVA_PARAM} -jar /opt/app/app.jar"]
+CMD ["sh", "-c", "java ${JAVA_PARAM} -Dserver.port=8080 -jar /opt/app/app.jar"]
