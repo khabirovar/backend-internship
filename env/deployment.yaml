@@ -49,22 +49,22 @@ spec:
             periodSeconds: 100
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-        - env: 
-          - name: DB_URL
-            valueFrom:
-              secretKeyRef:
-                name: postgresql
-                key: db-url
-          - name: DB_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgresql
-                key: database-user
-          - name: DB_PASSWD
-            valueFrom:
-              secretKeyRef:
-                name: postgresql
-                key: database-password
+          env: 
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: db-url
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: database-user
+            - name: DB_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: database-password
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
