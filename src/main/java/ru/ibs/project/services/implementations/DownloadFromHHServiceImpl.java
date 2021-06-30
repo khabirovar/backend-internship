@@ -101,14 +101,11 @@ public class DownloadFromHHServiceImpl implements DownloadFromHHService {
             e.printStackTrace();
         }
         String nameRegion = "Вне РФ";
-
-
         for (Long countryId : countryIds) {
             String countryUrlDictionary = URL_DICTIONARY + countryId;
             ResponseCountryHHDTO responseCountryHHDTO = restTemplate.getForObject(countryUrlDictionary,
                     ResponseCountryHHDTO.class);
             List<RegionDTO> regionDTOS = responseCountryHHDTO.getAreas();  //области
-
             for (RegionDTO regionDTO : regionDTOS) {
                 List<AreaDTO> cities = regionDTO.getAreas();
                 for (AreaDTO city : cities) {

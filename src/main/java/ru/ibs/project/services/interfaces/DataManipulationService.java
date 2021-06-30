@@ -6,7 +6,7 @@ import ru.ibs.project.entities.Vacancy;
 
 import java.util.Set;
 
-public interface VacancyService {
+public interface DataManipulationService {
 
     void createAll(Set<ItemDTO> itemDTOs);
 
@@ -14,5 +14,7 @@ public interface VacancyService {
 
     Set<Vacancy> getVacancySet();
 
+    void deleteVacancyArea();
 
+    void deleteAreaAndVacancy();
 }

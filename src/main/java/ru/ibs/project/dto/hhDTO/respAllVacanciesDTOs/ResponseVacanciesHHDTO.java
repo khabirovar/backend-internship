@@ -17,5 +17,4 @@ public class ResponseVacanciesHHDTO {  //DTO from hh.ru GET /vacancies
     private Long per_page;
     private Long page;
     private List<ItemDTO> items;
-//    List<ErrorDTO> errors;
 }

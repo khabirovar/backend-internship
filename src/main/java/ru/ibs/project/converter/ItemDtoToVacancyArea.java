@@ -8,7 +8,7 @@ import ru.ibs.project.entities.Area;
 import ru.ibs.project.entities.Vacancy;
 import ru.ibs.project.entities.VacancyArea;
 import ru.ibs.project.services.interfaces.DownloadFromHHService;
-import ru.ibs.project.services.interfaces.VacancyService;
+import ru.ibs.project.services.interfaces.DataManipulationService;
 
 import java.util.Objects;
 
@@ -17,12 +17,12 @@ public class ItemDtoToVacancyArea implements Converter<ItemDTO, VacancyArea> {
 
     private DownloadFromHHService downloadFromHHService;
 
-    private VacancyService vacancyService;
+    private DataManipulationService dataManipulationService;
 
     @Autowired
-    public ItemDtoToVacancyArea(DownloadFromHHService downloadFromHHService, VacancyService vacancyService) {
+    public ItemDtoToVacancyArea(DownloadFromHHService downloadFromHHService, DataManipulationService dataManipulationService) {
         this.downloadFromHHService = downloadFromHHService;
-        this.vacancyService = vacancyService;
+        this.dataManipulationService = dataManipulationService;
     }
 
     @Override
@@ -33,36 +33,20 @@ public class ItemDtoToVacancyArea implements Converter<ItemDTO, VacancyArea> {
         vacancyArea.setCurrencySalary(itemDTO.getSalary().getCurrency());
         vacancyArea.setNameEmployer(itemDTO.getEmployer().getName());
         vacancyArea.setNameExperience(downloadFromHHService.downloadExperienceByItemDTOid(itemDTO.getId()));
-//
-//        Set<Area> areaSet = vacancyService.getAreaSet();
-//        Set<Vacancy> vacancySet = vacancyService.getVacancySet();
-//
-//        Area areaByName = areaSet.
-//                stream().
-//                filter(data -> Objects.equals(data.getNameArea(),
-//                        itemDTO.getArea().getName())).findFirst().get();
-//                  Area areaFromDB = areaRepository.getByNameArea(itemDTO.getArea().getName());//посмотреть, есть ли в БД такой area
-//        vacancyArea.setArea(areaByName);
-//        Vacancy vacancyByName = vacancySet.
-//                stream().
-//                filter(data -> Objects.equals(data.getNameVacancy(),
-//                        itemDTO.getName())).findFirst().get();
-//              Vacancy vacancyFromDB = vacancyRepository.getByNameVacancy(itemDTO.getName());
-//        vacancyArea.setVacancy(vacancyByName);
         vacancyArea.setArea(findAreaByName(itemDTO.getArea().getName()));
         vacancyArea.setVacancy(findVacancyByName(itemDTO.getName()));
         return vacancyArea;
     }
 
     private Vacancy findVacancyByName(String name) {
-        return vacancyService.getVacancySet().
+        return dataManipulationService.getVacancySet().
                 stream().
                 filter(data -> Objects.equals(data.getNameVacancy(),
                         name)).findFirst().get();
     }
 
     private Area findAreaByName(String name) {
-        return vacancyService.getAreaSet().
+        return dataManipulationService.getAreaSet().
                 stream().
                 filter(data -> Objects.equals(data.getNameCity(),
                         name)).findFirst().get();

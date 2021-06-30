@@ -17,9 +17,9 @@ public class VacancyAreaServiceImpl implements VacancyAreaService {
     VacancyAreaRepository vacancyAreaRepository;
 
     @Override
-    public List<VacancyArea> createAllVacancyAreaList() {
+    public List<VacancyArea> createAllVacancyAreaList() {   //массив всх вакансий
         List<VacancyArea> allVacancies = (List<VacancyArea>) vacancyAreaRepository.findAll();
-        log.info("size allVacancies:"+ allVacancies.size());
+        log.info("size allVacancies:" + allVacancies.size());
         return allVacancies;
     }
 }

@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AreaDTO {
-    //    private Long id;  // ?
     private String name; //city name
 }

@@ -10,17 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DownloadRequestDTO {
-
     private String name;
-
     private Boolean onlyWithSalary;
-
-    private String orderBy; //enum???  сортировать по:
-
-    //publication_time
-    //salary_desc - по убыванию дохода
-    //salary_asc - по возрастанию дохода
-    //relevance - по соответствию
-
-
+    private String orderBy;  //publication_time / salary_desc / salary_asc / relevance
 }

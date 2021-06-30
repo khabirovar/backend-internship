@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-//@Data
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +22,7 @@ public class Area extends EntityBase {
 
     @Column(name = "name_city")
     @CsvBindByName
-    private String nameCity;  //!!исправить на nameCity
+    private String nameCity;
 
     @Column(name = "name_region")
     @CsvBindByName

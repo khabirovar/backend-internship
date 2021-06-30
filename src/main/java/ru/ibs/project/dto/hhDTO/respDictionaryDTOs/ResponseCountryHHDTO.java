@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseCountryHHDTO { //for GET https://api.hh.ru/areas/113
-
     private String name; //Country name: Россия
     private List<RegionDTO> areas; //Нижегородская обл. и т.д.
 }

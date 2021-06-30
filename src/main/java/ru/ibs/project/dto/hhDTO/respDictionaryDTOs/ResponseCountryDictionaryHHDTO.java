@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseCountryDictionaryHHDTO { //for list country id
-//    private String name;
     private Long id; //for list country Id
 }

@@ -14,8 +14,8 @@ import ru.ibs.project.entities.VacancyArea;
 import ru.ibs.project.repositories.AreaRepository;
 import ru.ibs.project.repositories.VacancyAreaRepository;
 import ru.ibs.project.repositories.VacancyRepository;
+import ru.ibs.project.services.interfaces.DataManipulationService;
 import ru.ibs.project.services.interfaces.DownloadFromHHService;
-import ru.ibs.project.services.interfaces.VacancyService;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -23,38 +23,36 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
-public class VacancyServiceImpl implements VacancyService {
+public class DataManipulationServiceImpl implements DataManipulationService {
 
     private final ConversionService conversionService;
     private VacancyRepository vacancyRepository;
     private AreaRepository areaRepository;
     private VacancyAreaRepository vacancyAreaRepository;
-    private final TransactionTemplate transactionTemplate;
-    private Set<Area> areaSet = new LinkedHashSet<>();
-    private Set<Vacancy> vacancySet = new LinkedHashSet<>();
     private DownloadFromHHService downloadFromHHService;
 
+    private Set<Area> areaSet = new LinkedHashSet<>();
+    private Set<Vacancy> vacancySet = new LinkedHashSet<>();
+
     @Autowired
-    public VacancyServiceImpl(
+    public DataManipulationServiceImpl(
             @Qualifier("mvcConversionService") ConversionService conversionService,
             VacancyRepository vacancyRepository,
             AreaRepository areaRepository,
             VacancyAreaRepository vacancyAreaRepository,
-            TransactionTemplate transactionTemplate,
             DownloadFromHHService downloadFromHHService
     ) {
-        this.conversionService = conversionService;
-        this.vacancyRepository = vacancyRepository;
-        this.areaRepository = areaRepository;
-        this.vacancyAreaRepository = vacancyAreaRepository;
-        this.transactionTemplate = transactionTemplate;
-        this.downloadFromHHService = downloadFromHHService;
+        this.conversionService = conversionService; //+
+        this.vacancyRepository = vacancyRepository; //+
+        this.areaRepository = areaRepository;  //+
+        this.vacancyAreaRepository = vacancyAreaRepository; //+
+        this.downloadFromHHService = downloadFromHHService; //+
     }
 
 
     @Override
     @Transactional
-    public void createAll(Set<ItemDTO> itemDTOs) {
+    public void createAll(Set<ItemDTO> itemDTOs) {   //в data manipulation service
         log.info("start fetching areas and vacancies");
         itemDTOs.forEach(itemDTO -> {
             Area area = conversionService.convert(itemDTO, Area.class);
@@ -87,13 +85,28 @@ public class VacancyServiceImpl implements VacancyService {
         vacancyAreaSet.clear();
     }
 
+
     @Override
-    public Set<Area> getAreaSet() {
+    @Transactional
+    public void deleteVacancyArea() {   //в data manipulation service
+        vacancyAreaRepository.deleteAll();
+    }
+
+    @Override
+    @Transactional
+    public void deleteAreaAndVacancy() {  //в data manipulation service
+        vacancyRepository.deleteAll();
+        areaRepository.deleteAll();
+    }
+
+
+    @Override
+    public Set<Area> getAreaSet() {  //в data manipulation service
         return areaSet;
     }
 
     @Override
-    public Set<Vacancy> getVacancySet() {
+    public Set<Vacancy> getVacancySet() {  //в data manipulation service
         return vacancySet;
     }
 
