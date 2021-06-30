@@ -39,16 +39,32 @@ spec:
             httpGet:
               path: /
               port: {{ .Values.service.port }}
-            timeoutSeconds: 10
-            periodSeconds: 100
+            timeoutSeconds: 60
+            periodSeconds: 150
           readinessProbe:
             httpGet:
               path: /
               port: {{ .Values.service.port }}
-            timeoutSeconds: 60
-            periodSeconds: 100
+            timeoutSeconds: 100
+            periodSeconds: 150
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env: 
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: db-url
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: database-user
+            - name: DB_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql
+                  key: database-password
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
