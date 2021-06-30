@@ -1,6 +1,9 @@
 package ru.ibs.project.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.opencsv.bean.CsvBindByName;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -14,50 +17,20 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "vacancy",
         uniqueConstraints =
-                { @UniqueConstraint(columnNames = "name_vacancy") }
+                {@UniqueConstraint(columnNames = "name_vacancy")}
 )
 public class Vacancy extends EntityBase {
 
     @Column(name = "name_vacancy")
+    @CsvBindByName
     private String nameVacancy;
-
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "experience_id")
-//    private Experience experience;//many to one
-
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "area_id")
-//    private Area area; //many to one
-
-
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "employer_id")
-//    private Employer employer;  //many to one. тут наименовании организации. может быть null?
-
-    //    @OneToOne(
-//            mappedBy = "vacancy",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true,
-//            fetch = FetchType.LAZY
-//    )
-//    @OneToOne(cascade = CascadeType.ALL)
-//    private Salary salary; //one to one.
 
     @OneToMany(mappedBy = "vacancy",
             orphanRemoval = true,
             fetch = FetchType.LAZY)
+    @JsonBackReference
+    @BatchSize(size = 100) //n+1 -> n/x+1
     private Set<VacancyArea> vacancyAreas;
-//    @BatchSize(size = 200) n+1 -> n/x+1
-//    vacancy.getVacancyAreas.forEach(va->{va.getSalary})
-
-//    @OneToMany(mappedBy = "vacancy")
-//    private Set<VacancySalary> vacancySalaries;
-
-
-//    @ManyToOne(cascade = CascadeType.ALL)  //manyToMany
-//    @JoinColumn( name = "AREA_ID", referencedColumnName = "ID")
-//    private Area area;
-
 
     @Override
     public boolean equals(Object o) {

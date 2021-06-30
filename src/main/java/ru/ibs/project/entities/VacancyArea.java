@@ -1,5 +1,9 @@
 package ru.ibs.project.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvRecurse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,30 +19,41 @@ import java.util.Objects;
 public class VacancyArea extends EntityBase {
 
     @Column(name = "fromSalary")
+    @CsvBindByName
     private Long fromSalary;
 
+
     @Column(name = "toSalary")
+    @CsvBindByName
     private Long toSalary;
 
     @Column(name = "currencySalary")
+    @CsvBindByName
     private String currencySalary;
 
     @Column(name = "nameEmployer")
+    @CsvBindByName
     private String nameEmployer;
 
     @Column(name = "nameExperience")
+    @CsvBindByName
     private String nameExperience;
 
-    //    @ManyToOne(cascade = CascadeType.ALL)
+
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = CascadeType.MERGE)
+    @JsonManagedReference
     @JoinColumn(name = "vacancy_id")
+    @CsvRecurse
     private Vacancy vacancy;
 
-    //    @ManyToOne(cascade = CascadeType.ALL)
+//    @CsvBindByName(column = "location", required = true)
+//    @CsvBindByPosition(position = 2)
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = CascadeType.MERGE)
+    @JsonManagedReference  //
     @JoinColumn(name = "area_id")
+    @CsvRecurse
     private Area area;
 
 //    @Override

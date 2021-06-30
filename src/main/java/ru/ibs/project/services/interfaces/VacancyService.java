@@ -13,4 +13,6 @@ public interface VacancyService {
     Set<Area> getAreaSet();
 
     Set<Vacancy> getVacancySet();
+
+
 }

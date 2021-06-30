@@ -14,7 +14,7 @@ import ru.ibs.project.entities.VacancyArea;
 import ru.ibs.project.repositories.AreaRepository;
 import ru.ibs.project.repositories.VacancyAreaRepository;
 import ru.ibs.project.repositories.VacancyRepository;
-import ru.ibs.project.services.interfaces.RTService;
+import ru.ibs.project.services.interfaces.DownloadFromHHService;
 import ru.ibs.project.services.interfaces.VacancyService;
 
 import java.util.LinkedHashSet;
@@ -32,7 +32,7 @@ public class VacancyServiceImpl implements VacancyService {
     private final TransactionTemplate transactionTemplate;
     private Set<Area> areaSet = new LinkedHashSet<>();
     private Set<Vacancy> vacancySet = new LinkedHashSet<>();
-    private RTService rtService;
+    private DownloadFromHHService downloadFromHHService;
 
     @Autowired
     public VacancyServiceImpl(
@@ -41,21 +41,20 @@ public class VacancyServiceImpl implements VacancyService {
             AreaRepository areaRepository,
             VacancyAreaRepository vacancyAreaRepository,
             TransactionTemplate transactionTemplate,
-            RTService rtService
+            DownloadFromHHService downloadFromHHService
     ) {
         this.conversionService = conversionService;
         this.vacancyRepository = vacancyRepository;
         this.areaRepository = areaRepository;
         this.vacancyAreaRepository = vacancyAreaRepository;
         this.transactionTemplate = transactionTemplate;
-        this.rtService=rtService;
+        this.downloadFromHHService = downloadFromHHService;
     }
 
 
     @Override
     @Transactional
     public void createAll(Set<ItemDTO> itemDTOs) {
-
         log.info("start fetching areas and vacancies");
         itemDTOs.forEach(itemDTO -> {
             Area area = conversionService.convert(itemDTO, Area.class);
@@ -66,20 +65,13 @@ public class VacancyServiceImpl implements VacancyService {
 
         log.info("start add nameRegion to areas");
         areaSet.forEach(area -> {
-            String nameRegion = rtService.readRegion(area.getNameArea());
+            String nameRegion = downloadFromHHService.downloadNameRegionByNameCity(area.getNameCity());
             area.setNameRegion(nameRegion);
         });
-//        for (Area area : areaSet) {
-//            String nameRegion = rtService.readRegion(area.getNameArea());
-//            area.setNameRegion(nameRegion);
-//        }
         areaRepository.saveAll(areaSet);
         vacancyRepository.saveAll(vacancySet);
         log.info("successful fetching areas and vacancies");
-//        itemDTOs.forEach(itemDTO -> {
-//            VacancyArea vacancyArea = conversionService.convert(itemDTO, VacancyArea.class);
-//            vacancyAreaRepository.save(vacancyArea);
-//        });
+
         log.info("start fetching VacancyAreas");
         AtomicInteger i = new AtomicInteger();  //for log
         Set<VacancyArea> vacancyAreaSet = new LinkedHashSet<>(); //for unique vacancyAreas
@@ -88,12 +80,6 @@ public class VacancyServiceImpl implements VacancyService {
             vacancyAreaSet.add(vacancyArea);
             log.info("convert " + i.getAndIncrement() + " VacancyArea");
         });
-//        for (ItemDTO itemDTO : itemDTOs) {
-//            VacancyArea vacancyArea = conversionService.convert(itemDTO, VacancyArea.class);
-////            vacancyAreaRepository.save(vacancyArea);
-//            vacancyAreaSet.add(vacancyArea);
-//            System.out.println(i++);
-//        }
         vacancyAreaRepository.saveAll(vacancyAreaSet);
         log.info("successful fetching VacancyAreas");
         areaSet.clear();

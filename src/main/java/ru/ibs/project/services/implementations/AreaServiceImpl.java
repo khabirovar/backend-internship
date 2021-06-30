@@ -5,13 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ibs.project.dto.frontDTO.CityFrontDTO;
 import ru.ibs.project.dto.frontDTO.RegionFrontDTO;
-import ru.ibs.project.dto.frontDTO.VacancyFrontDTO;
 import ru.ibs.project.entities.Area;
 import ru.ibs.project.entities.VacancyArea;
 import ru.ibs.project.repositories.AreaRepository;
 import ru.ibs.project.services.interfaces.AreaService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -54,7 +56,7 @@ public class AreaServiceImpl implements AreaService {
 //            VacancyFrontDTO vacancyFrontDTO = new VacancyFrontDTO();
 ////            vacancyFrontDTO.setCurrencySalary();
 //            regionFrontDTO.setRegion(nameRegion);
-            System.out.println(area.getNameArea());
+            System.out.println(area.getNameCity());
             System.out.println(area.getNameRegion());
             System.out.println(i++);
             //сформировать region
@@ -72,7 +74,6 @@ public class AreaServiceImpl implements AreaService {
     public List<Area> createListCityWithAllVacancies() {
         Iterable<Area> listArea = areaRepository.findAll();
         for (Area area : listArea) {
-
         }
 
         return (List<Area>) areaRepository.findAll();
@@ -84,7 +85,7 @@ public class AreaServiceImpl implements AreaService {
         List<Area> areaList = (List<Area>) areaRepository.findAll();
         List<CityFrontDTO> cityFrontDTOList = new ArrayList<>();
         for (Area area : areaList) {
-            String nameCity = area.getNameArea();
+            String nameCity = area.getNameCity();
             String nameRegion = area.getNameRegion();
             Long countVacancies = area.getVacancyAreas().stream().count();
             List<Long> listSalary = new ArrayList<>();
@@ -93,15 +94,32 @@ public class AreaServiceImpl implements AreaService {
             Long fromSalary = Long.MAX_VALUE;
             Long toSalary = Long.MIN_VALUE;
             for (VacancyArea vacancyArea : vacancyAreaSet) {
+//                String currency = vacancyArea.getCurrencySalary();
                 if (vacancyArea.getFromSalary() != null) {
-                    listSalary.add(vacancyArea.getFromSalary());
-                    if (vacancyArea.getFromSalary() < fromSalary)
-                        fromSalary = vacancyArea.getFromSalary();
+                    //конвертировать валюту
+                    Long fromSalaryRUB =
+                            convertCurrencyToRUR(vacancyArea.getCurrencySalary(), vacancyArea.getFromSalary());
+//                            vacancyArea.getFromSalary();
+//                    if (currency.equals("BYR")) {  //из беларускх руб в руб
+//                        fromSalaryRUB = (long) (fromSalaryRUB * 28.65);
+//                    } else if (currency.equals("KZT")) {  //из тенге в руб
+//                        fromSalaryRUB = (long) (fromSalaryRUB * 0.17);
+//                    } else if (currency.equals("EUR")) {
+//                        fromSalaryRUB = (long) (fromSalaryRUB * 86.27);
+//                    } else if (currency.equals("UAH")) {
+//                        fromSalaryRUB = (long) (fromSalaryRUB * 2.65);
+//                    } else if (currency.equals("USD"))
+//                        fromSalaryRUB = (long) (fromSalaryRUB * 2.65);
+                    listSalary.add(fromSalaryRUB);
+                    if (fromSalaryRUB < fromSalary)
+                        fromSalary = fromSalaryRUB;
                 }
                 if (vacancyArea.getToSalary() != null) {
-                    listSalary.add(vacancyArea.getToSalary());
-                    if (vacancyArea.getToSalary() > toSalary)
-                        toSalary = vacancyArea.getToSalary();
+                    Long toSalaryRUB =
+                            convertCurrencyToRUR(vacancyArea.getCurrencySalary(), vacancyArea.getToSalary());
+                    listSalary.add(toSalaryRUB);
+                    if (toSalaryRUB > toSalary)
+                        toSalary = toSalaryRUB;
                 }
             }
 //            VacancyArea minBySalary = area.getVacancyAreas()
@@ -151,6 +169,24 @@ public class AreaServiceImpl implements AreaService {
 
             cityFrontDTOList.add(new CityFrontDTO(nameCity, nameRegion, countVacancies, fromSalary, toSalary, medianValue));
         }
+        log.info("cities " + cityFrontDTOList.size());
         return cityFrontDTOList;
+    }
+
+    public Long convertCurrencyToRUR(String currency, Long value) {
+        switch (currency) {
+            case "BYR":
+                return (long) (value * 28.65);  //перенести константы в app.cont
+            case "KZT":
+                return (long) (value * 0.17);
+            case "EUR":
+                return (long) (value * 86.27);
+            case "UAH":
+                return (long) (value * 2.65);
+            case "USD":
+                return (long) (value * 72.45);
+            default:
+                return value;  //в том числе RUR
+        }
     }
 }

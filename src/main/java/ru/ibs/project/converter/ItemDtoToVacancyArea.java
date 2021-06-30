@@ -7,7 +7,7 @@ import ru.ibs.project.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
 import ru.ibs.project.entities.Area;
 import ru.ibs.project.entities.Vacancy;
 import ru.ibs.project.entities.VacancyArea;
-import ru.ibs.project.services.interfaces.RTService;
+import ru.ibs.project.services.interfaces.DownloadFromHHService;
 import ru.ibs.project.services.interfaces.VacancyService;
 
 import java.util.Objects;
@@ -15,13 +15,13 @@ import java.util.Objects;
 @Component
 public class ItemDtoToVacancyArea implements Converter<ItemDTO, VacancyArea> {
 
-    private RTService rtService;
+    private DownloadFromHHService downloadFromHHService;
 
     private VacancyService vacancyService;
 
     @Autowired
-    public ItemDtoToVacancyArea(RTService rtService, VacancyService vacancyService) {
-        this.rtService = rtService;
+    public ItemDtoToVacancyArea(DownloadFromHHService downloadFromHHService, VacancyService vacancyService) {
+        this.downloadFromHHService = downloadFromHHService;
         this.vacancyService = vacancyService;
     }
 
@@ -32,7 +32,7 @@ public class ItemDtoToVacancyArea implements Converter<ItemDTO, VacancyArea> {
         vacancyArea.setToSalary(itemDTO.getSalary().getTo());
         vacancyArea.setCurrencySalary(itemDTO.getSalary().getCurrency());
         vacancyArea.setNameEmployer(itemDTO.getEmployer().getName());
-        vacancyArea.setNameExperience(rtService.readExperience(itemDTO.getId()));
+        vacancyArea.setNameExperience(downloadFromHHService.downloadExperienceByItemDTOid(itemDTO.getId()));
 //
 //        Set<Area> areaSet = vacancyService.getAreaSet();
 //        Set<Vacancy> vacancySet = vacancyService.getVacancySet();
@@ -64,7 +64,7 @@ public class ItemDtoToVacancyArea implements Converter<ItemDTO, VacancyArea> {
     private Area findAreaByName(String name) {
         return vacancyService.getAreaSet().
                 stream().
-                filter(data -> Objects.equals(data.getNameArea(),
+                filter(data -> Objects.equals(data.getNameCity(),
                         name)).findFirst().get();
     }
 }

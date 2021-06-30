@@ -17,6 +17,9 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+        <db.user>postgres</db.user>
+        <db.passwd>O12345</db.passwd>
     </properties>
 
     <dependencies>
@@ -57,7 +60,31 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.0</version>
+        </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>local</id>
+            <properties>
+                <db.url>jdbc:postgresql://localhost:5432/postgres</db.url>
+                <db.user>postgres</db.user>
+                <db.passwd>O12345</db.passwd>
+            </properties>
+        </profile>
+        <profile>
+            <id>openshift</id>
+            <properties>
+                <db.url>jdbc:postgresql://group10-postgres.group10.svc:5432/postgres</db.url>
+                <db.user>postgres</db.user>
+                <db.passwd>O12345</db.passwd>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>

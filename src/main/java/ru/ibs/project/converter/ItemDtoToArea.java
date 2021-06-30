@@ -12,7 +12,7 @@ public class ItemDtoToArea implements Converter<ItemDTO, Area> {
     @Override
     public Area convert(ItemDTO itemDTO) {
         Area area = new Area();
-        area.setNameArea(itemDTO.getArea().getName());
+        area.setNameCity(itemDTO.getArea().getName());
         return area;
     }
 }
