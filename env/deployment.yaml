@@ -39,14 +39,15 @@ spec:
             httpGet:
               path: /
               port: {{ .Values.service.port }}
-            timeoutSeconds: 60
-            periodSeconds: 150
+            initialDelaySeconds: 100 
+            timeoutSeconds: 20
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /
               port: {{ .Values.service.port }}
-            timeoutSeconds: 100
-            periodSeconds: 150
+            timeoutSeconds: 30
+            periodSeconds: 60
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env: 
