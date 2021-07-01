@@ -1,6 +1,6 @@
 replicaCount: 1
 
-updateStrategy: 
+strategy: 
     type: Recreate
 
 image:
