@@ -1,5 +1,8 @@
 replicaCount: 1
 
+strategy: 
+    type: Recreate
+
 image:
     repository: docker.trainee.ru.com/CI_PROJECT_NAME
     pullPolicy: Always
@@ -26,8 +29,6 @@ ingress:
     enabled: true
     className: ""
     annotations: {} 
-        #kubernetes.io/ingress.class: nginx
-        #kubernetes.io/tls-acme: "true"
     hosts:
         - host: CI_PROJECT_NAME.apps.ocp4.trainee.ru.com
           paths:
