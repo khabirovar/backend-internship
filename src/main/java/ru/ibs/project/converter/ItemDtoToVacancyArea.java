@@ -7,8 +7,8 @@ import ru.ibs.project.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
 import ru.ibs.project.entities.Area;
 import ru.ibs.project.entities.Vacancy;
 import ru.ibs.project.entities.VacancyArea;
-import ru.ibs.project.services.interfaces.DownloadFromHHService;
 import ru.ibs.project.services.interfaces.DataManipulationService;
+import ru.ibs.project.services.interfaces.DownloadFromHHService;
 
 import java.util.Objects;
 
@@ -28,9 +28,11 @@ public class ItemDtoToVacancyArea implements Converter<ItemDTO, VacancyArea> {
     @Override
     public VacancyArea convert(ItemDTO itemDTO) {
         VacancyArea vacancyArea = new VacancyArea();
-        vacancyArea.setFromSalary(itemDTO.getSalary().getFrom());
-        vacancyArea.setToSalary(itemDTO.getSalary().getTo());
-        vacancyArea.setCurrencySalary(itemDTO.getSalary().getCurrency());
+        if (itemDTO.getSalary() != null) {
+            vacancyArea.setFromSalary(itemDTO.getSalary().getFrom());
+            vacancyArea.setToSalary(itemDTO.getSalary().getTo());
+            vacancyArea.setCurrencySalary(itemDTO.getSalary().getCurrency());
+        }
         vacancyArea.setNameEmployer(itemDTO.getEmployer().getName());
         vacancyArea.setNameExperience(downloadFromHHService.downloadExperienceByItemDTOid(itemDTO.getId()));
         vacancyArea.setArea(findAreaByName(itemDTO.getArea().getName()));

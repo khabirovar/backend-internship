@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 import ru.ibs.project.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
 import ru.ibs.project.entities.Area;
 import ru.ibs.project.entities.Vacancy;
@@ -52,7 +51,7 @@ public class DataManipulationServiceImpl implements DataManipulationService {
 
     @Override
     @Transactional
-    public void createAll(Set<ItemDTO> itemDTOs) {   //в data manipulation service
+    public void createAll(Set<ItemDTO> itemDTOs) {
         log.info("start fetching areas and vacancies");
         itemDTOs.forEach(itemDTO -> {
             Area area = conversionService.convert(itemDTO, Area.class);
@@ -94,7 +93,7 @@ public class DataManipulationServiceImpl implements DataManipulationService {
 
     @Override
     @Transactional
-    public void deleteAreaAndVacancy() {  //в data manipulation service
+    public void deleteAreaAndVacancy() {
         vacancyRepository.deleteAll();
         areaRepository.deleteAll();
     }

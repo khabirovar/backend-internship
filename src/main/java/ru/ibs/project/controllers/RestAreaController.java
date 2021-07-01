@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.ibs.project.dto.frontDTO.CityFrontDTO;
+import ru.ibs.project.dto.frontDTO.RegionFrontDTO;
 import ru.ibs.project.entities.Area;
 import ru.ibs.project.services.interfaces.AreaService;
 
@@ -29,4 +30,10 @@ public class RestAreaController {
     public List<CityFrontDTO> readAllCitiesInfo() {
         return areaService.createListAllCitiesInfo();
     }
+
+    @GetMapping("all-regions")   //+ массив регионов с параметрами
+    public List<RegionFrontDTO> readAllRegionsInfo() {
+        return areaService.createListAllRegionsInfo();
+    }
+
 }

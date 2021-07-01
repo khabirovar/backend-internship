@@ -5,13 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegionFrontDTO {  //DTO for front
-    private String region;
-    private List<VacancyFrontDTO> vacancyFrontDTOs;
+    private String nameRegion;
+    private Long countCities;
+    private Long countVacancies;
+    private Long minSalary;
+    private Long maxSalary;
+    private Long medianValue;
 }
