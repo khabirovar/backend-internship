@@ -46,6 +46,7 @@ spec:
             httpGet:
               path: /
               port: {{ .Values.service.port }}
+            initialDelaySeconds: 150
             timeoutSeconds: 40
             periodSeconds: 10
           resources:
