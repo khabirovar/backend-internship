@@ -6,6 +6,7 @@ metadata:
     {{- include "CI_PROJECT_NAME.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
+  clusterIP: 172.30.70.225
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.port }}
