@@ -1,14 +1,15 @@
-package ru.ibs.project.vacancyApp.services.implementations;
+package ru.ibs.project.services.implementations;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.ibs.project.vacancyApp.entities.Area;
-import ru.ibs.project.vacancyApp.services.interfaces.AreaService;
-import ru.ibs.project.vacancyApp.dto.frontDTO.CityFrontDTO;
-import ru.ibs.project.vacancyApp.dto.frontDTO.RegionFrontDTO;
-import ru.ibs.project.vacancyApp.entities.VacancyArea;
-import ru.ibs.project.vacancyApp.repositories.AreaRepository;
+import ru.ibs.project.resumeApp.dto.frontDTO.CityByResumesFrontDTO;
+import ru.ibs.project.services.interfaces.AreaService;
+import ru.ibs.project.entities.Area;
+import ru.ibs.project.vacancyApp.dto.frontDTO.CityByVacanciesFrontDTO;
+import ru.ibs.project.vacancyApp.dto.frontDTO.RegionByVacanciesFrontDTO;
+import ru.ibs.project.entities.VacancyArea;
+import ru.ibs.project.repositories.AreaRepository;
 
 import java.util.*;
 
@@ -19,11 +20,10 @@ public class AreaServiceImpl implements AreaService {
     @Autowired
     private AreaRepository areaRepository;
 
-
     @Override
-    public List<RegionFrontDTO> createListAllRegionsInfo() {
+    public List<RegionByVacanciesFrontDTO> createListAllRegionsInfoByVacancies() {
         Set<String> allRegions = areaRepository.readDistinctByNameRegion();
-        List<RegionFrontDTO> regionFrontDTOList = new ArrayList<>();
+        List<RegionByVacanciesFrontDTO> regionByVacanciesFrontDTOList = new ArrayList<>();
         for (String region : allRegions) {
             Long medianValue = null;
             Long fromSalary = null;
@@ -41,17 +41,17 @@ public class AreaServiceImpl implements AreaService {
                 fromSalary = Collections.min(listSalary);
                 toSalary = Collections.max(listSalary);
             }
-            regionFrontDTOList.add(new RegionFrontDTO(region, countCities, countVacancies, fromSalary, toSalary, medianValue));
+            regionByVacanciesFrontDTOList.add(new RegionByVacanciesFrontDTO(region, countCities, countVacancies, fromSalary, toSalary, medianValue));
         }
-        log.info("regions: " + regionFrontDTOList.size());
-        return regionFrontDTOList;
+        log.info("regions: " + regionByVacanciesFrontDTOList.size());
+        return regionByVacanciesFrontDTOList;
     }
 
 
     @Override
-    public List<CityFrontDTO> createListAllCitiesInfo() {  //+
+    public List<CityByVacanciesFrontDTO> createListAllCitiesInfoByVacancies() {  //+
         List<Area> areaList = (List<Area>) areaRepository.findAll();
-        List<CityFrontDTO> cityFrontDTOList = new ArrayList<>();
+        List<CityByVacanciesFrontDTO> cityByVacanciesFrontDTOList = new ArrayList<>();
         for (Area area : areaList) {
             Long medianValue = null;
             Long fromSalary = null;
@@ -66,10 +66,32 @@ public class AreaServiceImpl implements AreaService {
                 fromSalary = Collections.min(listSalary);
                 toSalary = Collections.max(listSalary);
             }
-            cityFrontDTOList.add(new CityFrontDTO(nameCity, nameRegion, countVacancies, fromSalary, toSalary, medianValue));
+            cityByVacanciesFrontDTOList.add(new CityByVacanciesFrontDTO(nameCity, nameRegion, countVacancies, fromSalary, toSalary, medianValue));
         }
-        log.info("cities " + cityFrontDTOList.size());
-        return cityFrontDTOList;
+        log.info("cities " + cityByVacanciesFrontDTOList.size());
+        return cityByVacanciesFrontDTOList;
+    }
+
+
+    @Override
+    public List<CityByResumesFrontDTO> createListAllCitiesInfoByResumes() {
+        List<Area> areaList = (List<Area>) areaRepository.findAll();
+        List<CityByResumesFrontDTO> cityByResumesFrontDTOS = new ArrayList<>();
+        for (Area area:areaList){
+            Long medianValue = null;
+            Long fromSalary = null;
+            Long toSalary = null;
+            String nameCity = area.getNameCity();
+            String nameRegion = area.getNameRegion();
+            Long countResumes = area.getResumes().stream().count();
+
+        }
+
+
+
+
+
+        return null;
     }
 
     private void createListSalary(Area area, List<Long> listSalary) {

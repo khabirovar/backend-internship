@@ -1,4 +1,4 @@
-package ru.ibs.project.resumeApp.services.implementations;
+package ru.ibs.project.services.implementations;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,9 +11,7 @@ import ru.ibs.project.resumeApp.dto.frontDTO.DownloadRequestDTOResume;
 import ru.ibs.project.resumeApp.dto.hhDTO.respAllResumesDTOs.ItemDTOResume;
 import ru.ibs.project.resumeApp.dto.hhDTO.respAllResumesDTOs.MainResponseResumesHHDTO;
 import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
-import ru.ibs.project.resumeApp.services.interfaces.DownloadFromHHServiceResume;
-import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
-import ru.ibs.project.vacancyApp.dto.hhDTO.respVacancyDTOs.ResponseVacancyHHDTO;
+import ru.ibs.project.services.interfaces.DownloadFromHHServiceResume;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -62,17 +60,12 @@ public class DownloadFromHHServiceResumeImpl implements DownloadFromHHServiceRes
                 log.info("get data from: " + conUrl);
             }
         }
-
-        //        vacancyRepository.saveAll(itemDTOs.stream().
-//                map(itemDTO -> conversionService.convert(itemDTO, Vacancy.class)).collect(Collectors.toList()));
-
         listIdResume = resumesDTO
                 .stream()
                 .map(ItemDTOResume::getId)
                 .collect(Collectors.toList());
         return listIdResume;
     }
-
 
     public Set<ResumeDTO> downloadAllResumeById(List<String> listIdResume) {
         Set<ResumeDTO> resumeDTOSet = new LinkedHashSet<>();
@@ -83,13 +76,4 @@ public class DownloadFromHHServiceResumeImpl implements DownloadFromHHServiceRes
         }
         return resumeDTOSet;
     }
-
-
-//    @Override
-//    public String downloadExperienceByItemDTOid(Long id) {
-//        String url = URL_VACANCIES + '/' + id.toString();
-//        ResponseVacancyHHDTO responseVacancyHHDTO = restTemplate.getForObject(url, ResponseVacancyHHDTO.class);
-//        return responseVacancyHHDTO.getExperience().getName();
-//    }
-
 }

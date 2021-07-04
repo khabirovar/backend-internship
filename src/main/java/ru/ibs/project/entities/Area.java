@@ -1,4 +1,4 @@
-package ru.ibs.project.vacancyApp.entities;
+package ru.ibs.project.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.opencsv.bean.CsvBindByName;
@@ -16,8 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "area",
         uniqueConstraints =
-                {@UniqueConstraint(columnNames = "name_city")}
-)
+                {@UniqueConstraint(columnNames = "name_city")})
 public class Area extends EntityBase {
 
     @Column(name = "name_city")
@@ -34,6 +33,14 @@ public class Area extends EntityBase {
     @JsonBackReference
     @BatchSize(size = 100) //n+1 -> n/x+1
     private Set<VacancyArea> vacancyAreas;
+
+
+    @OneToMany(mappedBy = "area",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @JsonBackReference
+    @BatchSize(size = 100) //n+1 -> n/x+1
+    private Set<Resume> resumes;
 
     @Override
     public boolean equals(Object o) {

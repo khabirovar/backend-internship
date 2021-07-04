@@ -1,4 +1,4 @@
-package ru.ibs.project.vacancyApp.entities;
+package ru.ibs.project.entities;
 
 import lombok.Data;
 

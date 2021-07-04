@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.ibs.project.vacancyApp.entities.Area;
-import ru.ibs.project.vacancyApp.services.interfaces.AreaService;
-import ru.ibs.project.vacancyApp.dto.frontDTO.CityFrontDTO;
-import ru.ibs.project.vacancyApp.dto.frontDTO.RegionFrontDTO;
+import ru.ibs.project.entities.Area;
+import ru.ibs.project.services.interfaces.AreaService;
+import ru.ibs.project.vacancyApp.dto.frontDTO.CityByVacanciesFrontDTO;
+import ru.ibs.project.vacancyApp.dto.frontDTO.RegionByVacanciesFrontDTO;
 
 import java.util.List;
 
@@ -22,20 +22,19 @@ public class RestAreaController {
     @Autowired
     private AreaService areaService;
 
-
     @GetMapping("all-cities-with-region")   //+ массив городов с указанием региона
     public List<Area> readAllCitiesWithRegion() {
        return areaService.createListCityWithRegion();
     }
 
     @GetMapping("all-cities")   //+ массив городов с параметрами
-    public List<CityFrontDTO> readAllCitiesInfo() {
-        return areaService.createListAllCitiesInfo();
+    public List<CityByVacanciesFrontDTO> readAllCitiesInfo() {
+        return areaService.createListAllCitiesInfoByVacancies();
     }
 
     @GetMapping("all-regions")   //+ массив регионов с параметрами
-    public List<RegionFrontDTO> readAllRegionsInfo() {
-        return areaService.createListAllRegionsInfo();
+    public List<RegionByVacanciesFrontDTO> readAllRegionsInfo() {
+        return areaService.createListAllRegionsInfoByVacancies();
     }
 
 }

@@ -10,11 +10,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
-import ru.ibs.project.vacancyApp.entities.VacancyArea;
-import ru.ibs.project.vacancyApp.services.interfaces.VacancyAreaService;
+import ru.ibs.project.entities.VacancyArea;
+import ru.ibs.project.services.interfaces.VacancyAreaService;
 import ru.ibs.project.vacancyApp.dto.frontDTO.DownloadRequestDTO;
-import ru.ibs.project.vacancyApp.services.interfaces.DataManipulationService;
-import ru.ibs.project.vacancyApp.services.interfaces.DownloadFromHHService;
+import ru.ibs.project.services.interfaces.DataManipulationService;
+import ru.ibs.project.services.interfaces.DownloadFromHHServiceVacancy;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,10 +25,10 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping(value = "/data-manipulation", consumes = {MediaType.ALL_VALUE},
         produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin
-public class ManipulationDataController {
+public class ManipulationDataVacancyController {
 
     @Autowired
-    private DownloadFromHHService downloadFromHHService;
+    private DownloadFromHHServiceVacancy downloadFromHHServiceVacancy;
 
     @Autowired
     private DataManipulationService dataManipulationService;
@@ -41,8 +41,8 @@ public class ManipulationDataController {
     public DownloadRequestDTO create(@RequestBody DownloadRequestDTO requestDTO) throws ExecutionException, InterruptedException {
         dataManipulationService.deleteVacancyArea();
         dataManipulationService.deleteAreaAndVacancy();
-        Set<ItemDTO> vacanciesDTO = downloadFromHHService.downloadAllItemDTOsByDownloadRequestDTO(requestDTO);
-        dataManipulationService.createAll(vacanciesDTO);
+        Set<ItemDTO> vacanciesDTO = downloadFromHHServiceVacancy.downloadAllItemDTOsByDownloadRequestDTO(requestDTO);
+        dataManipulationService.createAllVacancies(vacanciesDTO);
         vacanciesDTO.clear();
 
         return requestDTO;
@@ -53,8 +53,8 @@ public class ManipulationDataController {
     public DownloadRequestDTO createAndDelete(@RequestBody DownloadRequestDTO requestDTO) throws ExecutionException, InterruptedException {
         dataManipulationService.deleteVacancyArea();
         dataManipulationService.deleteAreaAndVacancy();
-        Set<ItemDTO> vacanciesDTO = downloadFromHHService.downloadAllItemDTOsByDownloadRequestDTO(requestDTO);
-        dataManipulationService.createAll(vacanciesDTO);
+        Set<ItemDTO> vacanciesDTO = downloadFromHHServiceVacancy.downloadAllItemDTOsByDownloadRequestDTO(requestDTO);
+        dataManipulationService.createAllVacancies(vacanciesDTO);
         vacanciesDTO.clear();
         return requestDTO;
     }

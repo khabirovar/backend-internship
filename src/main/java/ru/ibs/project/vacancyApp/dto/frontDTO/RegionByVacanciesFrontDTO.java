@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CityFrontDTO {
-    private String nameCity;
+public class RegionByVacanciesFrontDTO {  //DTO for front
     private String nameRegion;
+    private Long countCities;
     private Long countVacancies;
     private Long minSalary;
     private Long maxSalary;

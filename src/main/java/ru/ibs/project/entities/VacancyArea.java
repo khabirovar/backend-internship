@@ -1,4 +1,4 @@
-package ru.ibs.project.vacancyApp.entities;
+package ru.ibs.project.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.opencsv.bean.CsvBindByName;
@@ -19,7 +19,6 @@ public class VacancyArea extends EntityBase {
     @Column(name = "fromSalary")
     @CsvBindByName
     private Long fromSalary;
-
 
     @Column(name = "toSalary")
     @CsvBindByName

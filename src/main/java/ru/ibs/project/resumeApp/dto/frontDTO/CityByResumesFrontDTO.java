@@ -1,4 +1,4 @@
-package ru.ibs.project.vacancyApp.dto.frontDTO;
+package ru.ibs.project.resumeApp.dto.frontDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegionFrontDTO {  //DTO for front
+public class CityByResumesFrontDTO {
+    private String nameCity;
     private String nameRegion;
-    private Long countCities;
-    private Long countVacancies;
+    private Long resume;
     private Long minSalary;
     private Long maxSalary;
     private Long medianValue;

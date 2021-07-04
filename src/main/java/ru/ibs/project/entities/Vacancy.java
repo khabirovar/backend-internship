@@ -1,4 +1,4 @@
-package ru.ibs.project.vacancyApp.entities;
+package ru.ibs.project.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.opencsv.bean.CsvBindByName;

@@ -1,6 +1,6 @@
-package ru.ibs.project.vacancyApp.services.interfaces;
+package ru.ibs.project.services.interfaces;
 
-import ru.ibs.project.vacancyApp.entities.VacancyArea;
+import ru.ibs.project.entities.VacancyArea;
 
 import java.util.List;
 

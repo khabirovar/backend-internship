@@ -2,7 +2,7 @@ package ru.ibs.project.vacancyApp.converter;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-import ru.ibs.project.vacancyApp.entities.Area;
+import ru.ibs.project.entities.Area;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
 
 

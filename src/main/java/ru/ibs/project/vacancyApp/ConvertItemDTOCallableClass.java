@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
-import ru.ibs.project.vacancyApp.entities.VacancyArea;
+import ru.ibs.project.entities.VacancyArea;
 
 import java.util.concurrent.Callable;
 
@@ -26,7 +26,7 @@ public class ConvertItemDTOCallableClass implements Callable<VacancyArea> {
 
 
     @Override
-    public VacancyArea call() throws InterruptedException {
+    public VacancyArea call() {
         log.info("start thread " + Thread.currentThread().getId());
         VacancyArea vacancyArea = conversionService.convert(itemDTO, VacancyArea.class);
         log.info("finish thread " + Thread.currentThread().getId());

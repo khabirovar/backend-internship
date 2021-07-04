@@ -3,8 +3,8 @@ package ru.ibs.project.vacancyApp.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.ibs.project.vacancyApp.entities.VacancyArea;
-import ru.ibs.project.vacancyApp.services.interfaces.VacancyAreaService;
+import ru.ibs.project.entities.VacancyArea;
+import ru.ibs.project.services.interfaces.VacancyAreaService;
 
 import java.util.List;
 

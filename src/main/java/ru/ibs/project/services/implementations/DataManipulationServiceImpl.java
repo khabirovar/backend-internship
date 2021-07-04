@@ -1,4 +1,4 @@
-package ru.ibs.project.vacancyApp.services.implementations;
+package ru.ibs.project.services.implementations;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,18 +6,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
+import ru.ibs.project.entities.Resume;
+import ru.ibs.project.repositories.ResumeRepository;
 import ru.ibs.project.vacancyApp.ConvertItemDTOCallableClass;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.AreaDTO;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respDictionaryDTOs.RegionDTO;
-import ru.ibs.project.vacancyApp.entities.Area;
-import ru.ibs.project.vacancyApp.entities.Vacancy;
-import ru.ibs.project.vacancyApp.entities.VacancyArea;
-import ru.ibs.project.vacancyApp.repositories.AreaRepository;
-import ru.ibs.project.vacancyApp.repositories.VacancyAreaRepository;
-import ru.ibs.project.vacancyApp.repositories.VacancyRepository;
-import ru.ibs.project.vacancyApp.services.interfaces.DataManipulationService;
-import ru.ibs.project.vacancyApp.services.interfaces.DownloadFromHHService;
+import ru.ibs.project.entities.Area;
+import ru.ibs.project.entities.Vacancy;
+import ru.ibs.project.entities.VacancyArea;
+import ru.ibs.project.repositories.AreaRepository;
+import ru.ibs.project.repositories.VacancyAreaRepository;
+import ru.ibs.project.repositories.VacancyRepository;
+import ru.ibs.project.services.interfaces.DataManipulationService;
+import ru.ibs.project.services.interfaces.DownloadFromHHServiceVacancy;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -34,7 +37,9 @@ public class DataManipulationServiceImpl implements DataManipulationService {
     private VacancyRepository vacancyRepository;
     private AreaRepository areaRepository;
     private VacancyAreaRepository vacancyAreaRepository;
-    private DownloadFromHHService downloadFromHHService;
+    private DownloadFromHHServiceVacancy downloadFromHHServiceVacancy;
+    private ResumeRepository resumeRepository;
+
 
     private Set<Area> areaSet = new LinkedHashSet<>();  //for using in ItemDtoToVacancyArea
     private Set<Vacancy> vacancySet = new LinkedHashSet<>(); //for using in ItemDtoToVacancyArea
@@ -45,86 +50,107 @@ public class DataManipulationServiceImpl implements DataManipulationService {
             VacancyRepository vacancyRepository,
             AreaRepository areaRepository,
             VacancyAreaRepository vacancyAreaRepository,
-            DownloadFromHHService downloadFromHHService
+            DownloadFromHHServiceVacancy downloadFromHHServiceVacancy,
+            ResumeRepository resumeRepository
     ) {
         this.conversionService = conversionService; //+
         this.vacancyRepository = vacancyRepository; //+
         this.areaRepository = areaRepository;  //+
         this.vacancyAreaRepository = vacancyAreaRepository; //+
-        this.downloadFromHHService = downloadFromHHService; //+
+        this.downloadFromHHServiceVacancy = downloadFromHHServiceVacancy; //+
+        this.resumeRepository = resumeRepository;
     }
 
 
     @Override
     @Transactional
-    public void createAll(Set<ItemDTO> itemDTOs) throws ExecutionException, InterruptedException {
+    public void createAllVacancies(Set<ItemDTO> itemDTOs) throws ExecutionException, InterruptedException {
         log.info("start fetching areas and vacancies");
+        areaSet.clear();
+        vacancySet.clear();
         itemDTOs.forEach(itemDTO -> {
             Area area = conversionService.convert(itemDTO, Area.class);
             areaSet.add(area);
             Vacancy vacancy = conversionService.convert(itemDTO, Vacancy.class);
             vacancySet.add(vacancy);
         });
+        fillingAreaSetByRegion();
+//        log.info("start add nameRegion to areas");
+//        List<RegionDTO> regionDTOList = downloadFromHHService.downloadRegionDTOList();
+//        areaSet.forEach(area -> {
+//            String nameRegion = findNameRegionByNameCity(area.getNameCity(), regionDTOList);
+//            area.setNameRegion(nameRegion);
+//        });
+//        regionDTOList.clear();
 
-        log.info("start add nameRegion to areas");
-////////////////////////////////////////////////////////////////
-        //разбить на несколько потоков ?????
-        //этот кусок кода должны исполнять несколько потоков
-//
-//        AtomicInteger k = new AtomicInteger();  //for mapItems
-//        Map<Integer, Area> mapAreas = new HashMap<>();
-//        for (Area area : areaSet) {
-//            mapAreas.put(k.getAndIncrement(), area);
-//        }
-//
-//        ExecutorService esArea = Executors.newFixedThreadPool(5); //над задачей будут работать 4 потока
-//        for (int index = 0; index < mapAreas.size(); /*index++*/) {
-//
-//
-//                mapAreas.get(index++).getNameCity() ->
-//
-//            //
-//
-//        }
-//
-//        esArea.shutdown();
-
-        List<RegionDTO> regionDTOList = downloadFromHHService.downloadRegionDTOList();
-        areaSet.forEach(area -> {
-            String nameRegion = findNameRegionByNameCity(area.getNameCity(),regionDTOList);
-            area.setNameRegion(nameRegion);
-        });
-
-
-//
 //        areaSet.forEach(area -> {
 //            String nameRegion = downloadFromHHService.downloadNameRegionByNameCity(area.getNameCity());
 //            area.setNameRegion(nameRegion);
 //        });
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         areaRepository.saveAll(areaSet);
         vacancyRepository.saveAll(vacancySet);
         log.info("successful fetching areas and vacancies");
-
         log.info("start fetching VacancyAreas");
         Set<VacancyArea> vacancyAreaSet = fillingVacancyAreaSet(itemDTOs);
-
 //        itemDTOs.forEach(itemDTO -> {
 //            VacancyArea vacancyArea = conversionService.convert(itemDTO, VacancyArea.class);
 //            vacancyAreaSet.add(vacancyArea);
 //            log.info("convert " + i.getAndIncrement() + " VacancyArea");
 //        });
-
         vacancyAreaRepository.saveAll(vacancyAreaSet);
         log.info("successful fetching VacancyAreas");
-        regionDTOList.clear();
+//        regionDTOList.clear();
         areaSet.clear();
         vacancySet.clear();
         vacancyAreaSet.clear();
     }
 
-    private String findNameRegionByNameCity(String nameCity, List<RegionDTO> regionDTOList){
+
+    @Override
+    @Transactional
+    public void createAllResumes(Set<ResumeDTO> resumeDTOSet) {
+        log.info("start fetching resume");
+        areaSet.clear();
+        resumeDTOSet.forEach(resumeDTO -> {
+            Area area = conversionService.convert(resumeDTO, Area.class);
+            areaSet.add(area);
+        });
+        ////////////////////в отдельный метод
+//        log.info("start add nameRegion to areas");
+//        List<RegionDTO> regionDTOList = downloadFromHHService.downloadRegionDTOList();
+//        areaSet.forEach(area -> {
+//            String nameRegion = findNameRegionByNameCity(area.getNameCity(), regionDTOList);
+//            area.setNameRegion(nameRegion);
+//        });
+//        regionDTOList.clear();
+        ///////////////////////////
+        fillingAreaSetByRegion();
+        areaRepository.saveAll(areaSet);
+        log.info("successful fetching area");
+        log.info("start fetching Resume");
+        Set<Resume> resumeSet = new LinkedHashSet<>();
+        resumeDTOSet.forEach(resumeDTO -> {
+            Resume resume = conversionService.convert(resumeDTO, Resume.class);
+            resumeSet.add(resume);
+        });
+        resumeRepository.saveAll(resumeSet);
+        areaSet.clear();
+        resumeSet.clear();
+        log.info("successful fetching Resume");
+    }
+
+    private void fillingAreaSetByRegion() {
+        log.info("start add nameRegion to areas");
+        List<RegionDTO> regionDTOList = downloadFromHHServiceVacancy.downloadRegionDTOList();
+        areaSet.forEach(area -> {
+            String nameRegion = findNameRegionByNameCity(area.getNameCity(), regionDTOList);
+            area.setNameRegion(nameRegion);
+        });
+        regionDTOList.clear();
+    }
+
+
+    private String findNameRegionByNameCity(String nameCity, List<RegionDTO> regionDTOList) {
         if (nameCity.equals("Санкт-Петербург") || nameCity.equals("Москва"))
             return nameCity;
         String nameRegion = "Вне РФ";
@@ -139,7 +165,6 @@ public class DataManipulationServiceImpl implements DataManipulationService {
     }
 
 
-
     private Set<VacancyArea> fillingVacancyAreaSet(Set<ItemDTO> itemDTOs) throws ExecutionException, InterruptedException {
         Set<VacancyArea> vacancyAreaSet = new LinkedHashSet<>(); //for unique vacancyAreas
         AtomicInteger j = new AtomicInteger();  //for mapItems
@@ -149,7 +174,7 @@ public class DataManipulationServiceImpl implements DataManipulationService {
             mapItems.put(j.getAndIncrement(), itemDTO);
         }
         ExecutorService es = Executors.newFixedThreadPool(10);
-        for (int index = 0; index < mapItems.size();) {
+        for (int index = 0; index < mapItems.size(); ) {
             Future<VacancyArea> vacancyAreaFuture1 = es.submit(new ConvertItemDTOCallableClass(conversionService, mapItems.get(index++)));
             Future<VacancyArea> vacancyAreaFuture2 = es.submit(new ConvertItemDTOCallableClass(conversionService, mapItems.get(index++)));
             Future<VacancyArea> vacancyAreaFuture3 = es.submit(new ConvertItemDTOCallableClass(conversionService, mapItems.get(index++)));
@@ -200,6 +225,11 @@ public class DataManipulationServiceImpl implements DataManipulationService {
         areaRepository.deleteAll();
     }
 
+    @Override
+    @Transactional
+    public void deleteResume(){
+        resumeRepository.deleteAll();
+    }
 
     @Override
     public Set<Area> getAreaSet() {  //в data manipulation service

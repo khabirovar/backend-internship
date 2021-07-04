@@ -5,8 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.ibs.project.resumeApp.dto.frontDTO.DownloadRequestDTOResume;
 import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
-import ru.ibs.project.resumeApp.services.interfaces.DataManipulationServiceResume;
-import ru.ibs.project.resumeApp.services.interfaces.DownloadFromHHServiceResume;
+import ru.ibs.project.services.interfaces.DataManipulationService;
+import ru.ibs.project.services.interfaces.DownloadFromHHServiceResume;
 
 import java.util.List;
 import java.util.Set;
@@ -21,20 +21,17 @@ public class ManipulationDataResumeController {
     private DownloadFromHHServiceResume downloadFromHHServiceResume;
 
     @Autowired
-    private DataManipulationServiceResume dataManipulationServiceResume;
+    private DataManipulationService dataManipulationService;
 
     @PostMapping("create")
     public DownloadRequestDTOResume create(@RequestBody DownloadRequestDTOResume requestDTOResume) {
-        //по /resumes? скачать все id
-        // по GET /resumes/{resume_id} скачать информацию об этом человеке
+        dataManipulationService.deleteAreaAndVacancy();
+        dataManipulationService.deleteResume();
         List<String> listIdResume = downloadFromHHServiceResume.downloadAllIdDTOsByDownloadRequestDTO(requestDTOResume);
         Set<ResumeDTO> resumeDTOSet = downloadFromHHServiceResume.downloadAllResumeById(listIdResume);
-        dataManipulationServiceResume.createAll(resumeDTOSet);
-
-
-//        Set<ItemDTOResume> resumesDTO = downloadFromHHService.downloadAllItemDTOsByDownloadRequestDTO(requestDTO);
-//        dataManipulationService.createAll(vacanciesDTO);
-//        vacanciesDTO.clear();
+        dataManipulationService.createAllResumes(resumeDTOSet);
+        listIdResume.clear();
+        resumeDTOSet.clear();
         return requestDTOResume;
     }
 }

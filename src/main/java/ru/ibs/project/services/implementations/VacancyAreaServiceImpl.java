@@ -1,11 +1,11 @@
-package ru.ibs.project.vacancyApp.services.implementations;
+package ru.ibs.project.services.implementations;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.ibs.project.vacancyApp.entities.VacancyArea;
-import ru.ibs.project.vacancyApp.repositories.VacancyAreaRepository;
-import ru.ibs.project.vacancyApp.services.interfaces.VacancyAreaService;
+import ru.ibs.project.entities.VacancyArea;
+import ru.ibs.project.repositories.VacancyAreaRepository;
+import ru.ibs.project.services.interfaces.VacancyAreaService;
 
 import java.util.List;
 
