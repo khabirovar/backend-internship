@@ -185,6 +185,8 @@ public class AreaServiceImpl implements AreaService {
                 return (long) (value * 2.65);
             case "USD":
                 return (long) (value * 72.45);
+            case "UZS":
+                return (long) (value * 0.0069);
             default:
                 return value;
         }

@@ -61,7 +61,7 @@ public class Resume extends EntityBase {
 
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = CascadeType.MERGE)
-    @JsonManagedReference  //
+    @JsonManagedReference
     @JoinColumn(name = "area_id")
     @CsvRecurse
     private Area area;
