@@ -1,9 +1,9 @@
 package ru.ibs.project.services.interfaces;
 
-import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
-import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
 import ru.ibs.project.entities.Area;
 import ru.ibs.project.entities.Vacancy;
+import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
+import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
 
 import java.util.Set;
 import java.util.concurrent.ExecutionException;

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.ibs.project.resumeApp.dto.frontDTO.CityByResumesFrontDTO;
 import ru.ibs.project.resumeApp.dto.frontDTO.RegionByResumesFrontDTO;
 import ru.ibs.project.services.interfaces.AreaService;
-import ru.ibs.project.vacancyApp.dto.frontDTO.RegionByVacanciesFrontDTO;
 
 import java.util.List;
 
@@ -19,8 +18,12 @@ import java.util.List;
 @CrossOrigin
 public class RestAreaResumeController {
 
-    @Autowired
     private AreaService areaService;
+
+    @Autowired
+    public RestAreaResumeController(AreaService areaService) {
+        this.areaService = areaService;
+    }
 
     @GetMapping("all-cities")
     public List<CityByResumesFrontDTO> readAllCitiesResumeInfo() {
@@ -31,6 +34,4 @@ public class RestAreaResumeController {
     public List<RegionByResumesFrontDTO> readAllRegionsInfo() {
         return areaService.createListAllRegionsInfoByResumes();
     }
-
-
 }

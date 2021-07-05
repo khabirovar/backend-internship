@@ -11,7 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ContactDTO {
     private TypeDTO type;
-//    private String value; //for email
     private ValueDTO value; //for phone
-
 }

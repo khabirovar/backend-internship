@@ -3,11 +3,11 @@ package ru.ibs.project.resumeApp.converter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import ru.ibs.project.entities.Area;
+import ru.ibs.project.entities.Resume;
 import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ContactDTO;
 import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
-import ru.ibs.project.entities.Resume;
 import ru.ibs.project.services.interfaces.DataManipulationService;
-import ru.ibs.project.entities.Area;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,8 +15,12 @@ import java.util.Objects;
 @Component
 public class ResumeDtoToResume implements Converter<ResumeDTO, Resume> {
 
-    @Autowired
     private DataManipulationService dataManipulationService;
+
+    @Autowired
+    public ResumeDtoToResume(DataManipulationService dataManipulationService) {
+        this.dataManipulationService = dataManipulationService;
+    }
 
 
     @Override
@@ -30,7 +34,6 @@ public class ResumeDtoToResume implements Converter<ResumeDTO, Resume> {
         resume.setSalaryCurrency(resumeDTO.getSalary().getCurrency());
         resume.setSalaryValue(resumeDTO.getSalary().getAmount());
         resume.setTotalExperienceMonths(resumeDTO.getTotal_experience().getMonths());
-//        resume.setArea();
         resume.setArea(findAreaResumeByName(resumeDTO.getArea().getName()));
         List<ContactDTO> contactDTOList = resumeDTO.getContact();
         for (ContactDTO contactDTO : contactDTOList) {
@@ -42,13 +45,10 @@ public class ResumeDtoToResume implements Converter<ResumeDTO, Resume> {
         return resume;
     }
 
-
     private Area findAreaResumeByName(String name) {
         return dataManipulationService.getAreaSet().
                 stream().
                 filter(data -> Objects.equals(data.getNameCity(),
                         name)).findFirst().get();
     }
-
-
 }

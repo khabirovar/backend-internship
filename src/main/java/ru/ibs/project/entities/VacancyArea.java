@@ -44,11 +44,9 @@ public class VacancyArea extends EntityBase {
     @CsvRecurse
     private Vacancy vacancy;
 
-    //    @CsvBindByName(column = "location", required = true)
-//    @CsvBindByPosition(position = 2)
     @ManyToOne(fetch = FetchType.EAGER,
             cascade = CascadeType.MERGE)
-    @JsonManagedReference  //
+    @JsonManagedReference
     @JoinColumn(name = "area_id")
     @CsvRecurse
     private Area area;

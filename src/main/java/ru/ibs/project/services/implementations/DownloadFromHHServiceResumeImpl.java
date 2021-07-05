@@ -1,12 +1,10 @@
 package ru.ibs.project.services.implementations;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ru.ibs.project.exceptions.MyException;
 import ru.ibs.project.resumeApp.dto.frontDTO.DownloadRequestDTOResume;
 import ru.ibs.project.resumeApp.dto.hhDTO.respAllResumesDTOs.ItemDTOResume;
 import ru.ibs.project.resumeApp.dto.hhDTO.respAllResumesDTOs.MainResponseResumesHHDTO;
@@ -40,25 +38,15 @@ public class DownloadFromHHServiceResumeImpl implements DownloadFromHHServiceRes
         String url = URL_RESUMES;
         List<String> listIdResume;
         Set<ItemDTOResume> resumesDTO = new LinkedHashSet<>();
-
-        if (!StringUtils.isEmpty(requestDTOResume.getName()))
-            url += "?text=" + requestDTOResume.getName() + "&per_page=100";
-        else
-            throw new MyException("Resume name required");
-
+        url += "?text=" + requestDTOResume.getName() + "&per_page=100";
         MainResponseResumesHHDTO mainResponseResumesHHDTO = restTemplate.getForObject(url, MainResponseResumesHHDTO.class);
-
         log.info("found " + mainResponseResumesHHDTO.getFound() + " resumes");
-        if (mainResponseResumesHHDTO.getFound() == 0)
-            throw new MyException("this resume doesn't exist");
-        else {
-            for (int page = 0; page < mainResponseResumesHHDTO.getPages(); page++) {
-                String conUrl = url + "&page=" + page;
-                MainResponseResumesHHDTO responseResumesPage =
-                        restTemplate.getForObject(conUrl, MainResponseResumesHHDTO.class);
-                resumesDTO.addAll(responseResumesPage.getItems());
-                log.info("get data from: " + conUrl);
-            }
+        for (int page = 0; page < mainResponseResumesHHDTO.getPages(); page++) {
+            String conUrl = url + "&page=" + page;
+            MainResponseResumesHHDTO responseResumesPage =
+                    restTemplate.getForObject(conUrl, MainResponseResumesHHDTO.class);
+            resumesDTO.addAll(responseResumesPage.getItems());
+            log.info("get data from: " + conUrl);
         }
         listIdResume = resumesDTO
                 .stream()

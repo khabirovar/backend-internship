@@ -17,6 +17,4 @@ public class ExperienceDTOResume {
     private String position;
     private String start;
     private String end;
-
-
 }

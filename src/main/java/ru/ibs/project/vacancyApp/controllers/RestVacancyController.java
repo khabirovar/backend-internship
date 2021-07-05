@@ -2,7 +2,10 @@ package ru.ibs.project.vacancyApp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.ibs.project.entities.VacancyArea;
 import ru.ibs.project.services.interfaces.VacancyAreaService;
 
@@ -14,12 +17,15 @@ import java.util.List;
 @CrossOrigin
 public class RestVacancyController {
 
-    @Autowired
     private VacancyAreaService vacancyAreaService;
 
-    @GetMapping("all-vacancies")     //+массив всех вакансий
-    public List<VacancyArea> readAllVacancies(){
-        return vacancyAreaService.createAllVacancyAreaList();
+    @Autowired
+    public RestVacancyController(VacancyAreaService vacancyAreaService) {
+        this.vacancyAreaService = vacancyAreaService;
     }
 
+    @GetMapping("all-vacancies")     //just array all vacancies
+    public List<VacancyArea> readAllVacancies() {
+        return vacancyAreaService.createAllVacancyAreaList();
+    }
 }

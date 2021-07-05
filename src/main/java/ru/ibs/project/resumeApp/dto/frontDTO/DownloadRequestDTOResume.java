@@ -11,7 +11,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DownloadRequestDTOResume {
     private String name;
-//    private String orderBy;
 }
-
-

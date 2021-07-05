@@ -13,11 +13,15 @@ import java.util.List;
 @Slf4j
 public class VacancyAreaServiceImpl implements VacancyAreaService {
 
+    private VacancyAreaRepository vacancyAreaRepository;
+
     @Autowired
-    VacancyAreaRepository vacancyAreaRepository;
+    public VacancyAreaServiceImpl(VacancyAreaRepository vacancyAreaRepository) {
+        this.vacancyAreaRepository = vacancyAreaRepository;
+    }
 
     @Override
-    public List<VacancyArea> createAllVacancyAreaList() {   //массив всх вакансий
+    public List<VacancyArea> createAllVacancyAreaList() {   //all vacancies array
         List<VacancyArea> allVacancies = (List<VacancyArea>) vacancyAreaRepository.findAll();
         log.info("size allVacancies:" + allVacancies.size());
         return allVacancies;

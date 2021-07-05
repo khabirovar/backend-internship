@@ -17,11 +17,15 @@ import java.util.Set;
 @CrossOrigin
 public class ManipulationDataResumeController {
 
-    @Autowired
     private DownloadFromHHServiceResume downloadFromHHServiceResume;
 
-    @Autowired
     private DataManipulationService dataManipulationService;
+
+    @Autowired
+    public ManipulationDataResumeController(DataManipulationService dataManipulationService, DownloadFromHHServiceResume downloadFromHHServiceResume) {
+        this.dataManipulationService = dataManipulationService;
+        this.downloadFromHHServiceResume = downloadFromHHServiceResume;
+    }
 
     @PostMapping("create")
     public DownloadRequestDTOResume create(@RequestBody DownloadRequestDTOResume requestDTOResume) {

@@ -2,8 +2,8 @@ package ru.ibs.project.resumeApp.converter;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
 import ru.ibs.project.entities.Area;
+import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
 
 @Component
 public class ResumeDtoToArea implements Converter<ResumeDTO, Area> {

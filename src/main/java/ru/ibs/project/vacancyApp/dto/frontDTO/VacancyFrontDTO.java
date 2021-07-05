@@ -17,5 +17,4 @@ public class VacancyFrontDTO {
     private String currencySalary;
     private String nameEmployer;
     private String nameExperience;
-
 }

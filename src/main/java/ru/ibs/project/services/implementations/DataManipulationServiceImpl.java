@@ -6,21 +6,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
-import ru.ibs.project.entities.Resume;
-import ru.ibs.project.repositories.ResumeRepository;
-import ru.ibs.project.vacancyApp.ConvertItemDTOCallableClass;
-import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.AreaDTO;
-import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
-import ru.ibs.project.vacancyApp.dto.hhDTO.respDictionaryDTOs.RegionDTO;
 import ru.ibs.project.entities.Area;
+import ru.ibs.project.entities.Resume;
 import ru.ibs.project.entities.Vacancy;
 import ru.ibs.project.entities.VacancyArea;
 import ru.ibs.project.repositories.AreaRepository;
+import ru.ibs.project.repositories.ResumeRepository;
 import ru.ibs.project.repositories.VacancyAreaRepository;
 import ru.ibs.project.repositories.VacancyRepository;
+import ru.ibs.project.resumeApp.dto.hhDTO.respResumeDTOs.ResumeDTO;
 import ru.ibs.project.services.interfaces.DataManipulationService;
 import ru.ibs.project.services.interfaces.DownloadFromHHServiceVacancy;
+import ru.ibs.project.vacancyApp.converter.ConvertItemDTOCallableClass;
+import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.AreaDTO;
+import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
+import ru.ibs.project.vacancyApp.dto.hhDTO.respDictionaryDTOs.RegionDTO;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -53,11 +53,11 @@ public class DataManipulationServiceImpl implements DataManipulationService {
             DownloadFromHHServiceVacancy downloadFromHHServiceVacancy,
             ResumeRepository resumeRepository
     ) {
-        this.conversionService = conversionService; //+
-        this.vacancyRepository = vacancyRepository; //+
-        this.areaRepository = areaRepository;  //+
-        this.vacancyAreaRepository = vacancyAreaRepository; //+
-        this.downloadFromHHServiceVacancy = downloadFromHHServiceVacancy; //+
+        this.conversionService = conversionService;
+        this.vacancyRepository = vacancyRepository;
+        this.areaRepository = areaRepository;
+        this.vacancyAreaRepository = vacancyAreaRepository;
+        this.downloadFromHHServiceVacancy = downloadFromHHServiceVacancy;
         this.resumeRepository = resumeRepository;
     }
 
@@ -75,31 +75,13 @@ public class DataManipulationServiceImpl implements DataManipulationService {
             vacancySet.add(vacancy);
         });
         fillingAreaSetByRegion();
-//        log.info("start add nameRegion to areas");
-//        List<RegionDTO> regionDTOList = downloadFromHHService.downloadRegionDTOList();
-//        areaSet.forEach(area -> {
-//            String nameRegion = findNameRegionByNameCity(area.getNameCity(), regionDTOList);
-//            area.setNameRegion(nameRegion);
-//        });
-//        regionDTOList.clear();
-
-//        areaSet.forEach(area -> {
-//            String nameRegion = downloadFromHHService.downloadNameRegionByNameCity(area.getNameCity());
-//            area.setNameRegion(nameRegion);
-//        });
         areaRepository.saveAll(areaSet);
         vacancyRepository.saveAll(vacancySet);
         log.info("successful fetching areas and vacancies");
         log.info("start fetching VacancyAreas");
         Set<VacancyArea> vacancyAreaSet = fillingVacancyAreaSet(itemDTOs);
-//        itemDTOs.forEach(itemDTO -> {
-//            VacancyArea vacancyArea = conversionService.convert(itemDTO, VacancyArea.class);
-//            vacancyAreaSet.add(vacancyArea);
-//            log.info("convert " + i.getAndIncrement() + " VacancyArea");
-//        });
         vacancyAreaRepository.saveAll(vacancyAreaSet);
         log.info("successful fetching VacancyAreas");
-//        regionDTOList.clear();
         areaSet.clear();
         vacancySet.clear();
         vacancyAreaSet.clear();
@@ -115,15 +97,6 @@ public class DataManipulationServiceImpl implements DataManipulationService {
             Area area = conversionService.convert(resumeDTO, Area.class);
             areaSet.add(area);
         });
-        ////////////////////в отдельный метод
-//        log.info("start add nameRegion to areas");
-//        List<RegionDTO> regionDTOList = downloadFromHHService.downloadRegionDTOList();
-//        areaSet.forEach(area -> {
-//            String nameRegion = findNameRegionByNameCity(area.getNameCity(), regionDTOList);
-//            area.setNameRegion(nameRegion);
-//        });
-//        regionDTOList.clear();
-        ///////////////////////////
         fillingAreaSetByRegion();
         areaRepository.saveAll(areaSet);
         log.info("successful fetching area");
@@ -214,7 +187,7 @@ public class DataManipulationServiceImpl implements DataManipulationService {
 
     @Override
     @Transactional
-    public void deleteVacancyArea() {   //в data manipulation service
+    public void deleteVacancyArea() {
         vacancyAreaRepository.deleteAll();
     }
 
@@ -227,21 +200,17 @@ public class DataManipulationServiceImpl implements DataManipulationService {
 
     @Override
     @Transactional
-    public void deleteResume(){
+    public void deleteResume() {
         resumeRepository.deleteAll();
     }
 
     @Override
-    public Set<Area> getAreaSet() {  //в data manipulation service
+    public Set<Area> getAreaSet() {
         return areaSet;
     }
 
     @Override
-    public Set<Vacancy> getVacancySet() {  //в data manipulation service
+    public Set<Vacancy> getVacancySet() {
         return vacancySet;
     }
-
-    //        vacancyRepository.saveAll(itemDTOs.stream().
-//                map(itemDTO -> conversionService.convert(itemDTO, Vacancy.class)).collect(Collectors.toList()));
-
 }

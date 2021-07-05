@@ -7,6 +7,7 @@ import ru.ibs.project.entities.Area;
 
 import java.util.List;
 import java.util.Set;
+
 @Repository
 public interface AreaRepository extends CrudRepository<Area, Long> {
 

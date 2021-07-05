@@ -17,5 +17,4 @@ public class MainResponseResumesHHDTO { //DTO from hh.ru GET /resumes
     private Long per_page;
     private Long page;
     private List<ItemDTOResume> items;
-
 }

@@ -14,12 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 public class ResumeDTO {
     private String id;
-    private String title;  //желаемая должность
+    private String title;  //career objective
     private String first_name;
     private String last_name;
     private String middle_name;
     private Long age;
-    private AreaDTO area;  //nameCity
+    private AreaDTO area;
     private List<ContactDTO> contact;
     private SalaryResumeDTO salary;
     private List<ExperienceDTOResume> experience;

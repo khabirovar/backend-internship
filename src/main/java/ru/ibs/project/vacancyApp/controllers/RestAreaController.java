@@ -19,22 +19,25 @@ import java.util.List;
 @CrossOrigin
 public class RestAreaController {
 
-    @Autowired
     private AreaService areaService;
 
-    @GetMapping("all-cities-with-region")   //+ массив городов с указанием региона
-    public List<Area> readAllCitiesWithRegion() {
-       return areaService.createListCityWithRegion();
+    @Autowired
+    public RestAreaController(AreaService areaService) {
+        this.areaService = areaService;
     }
 
-    @GetMapping("all-cities")   //+ массив городов с параметрами
+    @GetMapping("all-cities-with-region")   //just all cities array with region
+    public List<Area> readAllCitiesWithRegion() {
+        return areaService.createListCityWithRegion();
+    }
+
+    @GetMapping("all-cities")   //array all cities with params
     public List<CityByVacanciesFrontDTO> readAllCitiesInfo() {
         return areaService.createListAllCitiesInfoByVacancies();
     }
 
-    @GetMapping("all-regions")   //+ массив регионов с параметрами
+    @GetMapping("all-regions")   //array all regions with params
     public List<RegionByVacanciesFrontDTO> readAllRegionsInfo() {
         return areaService.createListAllRegionsInfoByVacancies();
     }
-
 }

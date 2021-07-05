@@ -27,14 +27,18 @@ import java.util.concurrent.ExecutionException;
 @CrossOrigin
 public class ManipulationDataVacancyController {
 
-    @Autowired
     private DownloadFromHHServiceVacancy downloadFromHHServiceVacancy;
 
-    @Autowired
     private DataManipulationService dataManipulationService;
 
-    @Autowired
     private VacancyAreaService vacancyAreaService;
+
+    @Autowired
+    public ManipulationDataVacancyController(DownloadFromHHServiceVacancy downloadFromHHServiceVacancy, DataManipulationService dataManipulationService, VacancyAreaService vacancyAreaService) {
+        this.downloadFromHHServiceVacancy = downloadFromHHServiceVacancy;
+        this.dataManipulationService = dataManipulationService;
+        this.vacancyAreaService = vacancyAreaService;
+    }
 
 
     @PostMapping("create")
@@ -44,7 +48,6 @@ public class ManipulationDataVacancyController {
         Set<ItemDTO> vacanciesDTO = downloadFromHHServiceVacancy.downloadAllItemDTOsByDownloadRequestDTO(requestDTO);
         dataManipulationService.createAllVacancies(vacanciesDTO);
         vacanciesDTO.clear();
-
         return requestDTO;
     }
 

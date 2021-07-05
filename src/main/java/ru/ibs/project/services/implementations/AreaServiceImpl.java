@@ -19,8 +19,12 @@ import java.util.*;
 @Slf4j
 public class AreaServiceImpl implements AreaService {
 
-    @Autowired
     private AreaRepository areaRepository;
+
+    @Autowired
+    public AreaServiceImpl(AreaRepository areaRepository) {
+        this.areaRepository = areaRepository;
+    }
 
     @Override
     public List<RegionByVacanciesFrontDTO> createListAllRegionsInfoByVacancies() {
@@ -124,18 +128,6 @@ public class AreaServiceImpl implements AreaService {
         return citiesByResumesFrontDTO;
     }
 
-    private void createListSalaryForResumes(Area area, List<Long> listSalary) {
-        Set<Resume> resumeSet = area.getResumes();
-        for (Resume resume : resumeSet) {
-            if (resume.getSalaryValue() != null) {
-                Long salaryRUB = convertCurrencyToRUR(resume.getSalaryCurrency(), resume.getSalaryValue());
-                listSalary.add(salaryRUB);
-            }
-        }
-
-    }
-
-
     private void createListSalaryForVacancies(Area area, List<Long> listSalary) {
         Set<VacancyArea> vacancyAreaSet = area.getVacancyAreas();
         for (VacancyArea vacancyArea : vacancyAreaSet) {
@@ -150,14 +142,15 @@ public class AreaServiceImpl implements AreaService {
         }
     }
 
-
-    @Override
-    public List<Area> createListCityWithRegion() {  //+
-        List<Area> listCityWithRegion = (List<Area>) areaRepository.findAll();
-        log.info("cities " + listCityWithRegion.size());
-        return listCityWithRegion;
+    private void createListSalaryForResumes(Area area, List<Long> listSalary) {
+        Set<Resume> resumeSet = area.getResumes();
+        for (Resume resume : resumeSet) {
+            if (resume.getSalaryValue() != null) {
+                Long salaryRUB = convertCurrencyToRUR(resume.getSalaryCurrency(), resume.getSalaryValue());
+                listSalary.add(salaryRUB);
+            }
+        }
     }
-
 
     private Long findMedianValueByListSalary(List<Long> listSalary) {
         if (listSalary.isEmpty())
@@ -195,5 +188,12 @@ public class AreaServiceImpl implements AreaService {
             default:
                 return value;
         }
+    }
+
+    @Override
+    public List<Area> createListCityWithRegion() {
+        List<Area> listCityWithRegion = (List<Area>) areaRepository.findAll();
+        log.info("cities " + listCityWithRegion.size());
+        return listCityWithRegion;
     }
 }

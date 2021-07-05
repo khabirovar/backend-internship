@@ -31,9 +31,9 @@ public class Configuration {
     }
 
     @Bean
-    public void showAllProperties(){
-        log.info("datasource URL: "+ url);
-        log.info("datasource username: "+ username);
-        log.info("datasource password: "+ password);
+    public void showAllProperties() {
+        log.info("datasource URL: " + url);
+        log.info("datasource username: " + username);
+        log.info("datasource password: " + password);
     }
 }
