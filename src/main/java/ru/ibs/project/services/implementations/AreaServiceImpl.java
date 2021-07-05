@@ -3,13 +3,15 @@ package ru.ibs.project.services.implementations;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.ibs.project.resumeApp.dto.frontDTO.CityByResumesFrontDTO;
-import ru.ibs.project.services.interfaces.AreaService;
 import ru.ibs.project.entities.Area;
-import ru.ibs.project.vacancyApp.dto.frontDTO.CityByVacanciesFrontDTO;
-import ru.ibs.project.vacancyApp.dto.frontDTO.RegionByVacanciesFrontDTO;
+import ru.ibs.project.entities.Resume;
 import ru.ibs.project.entities.VacancyArea;
 import ru.ibs.project.repositories.AreaRepository;
+import ru.ibs.project.resumeApp.dto.frontDTO.CityByResumesFrontDTO;
+import ru.ibs.project.resumeApp.dto.frontDTO.RegionByResumesFrontDTO;
+import ru.ibs.project.services.interfaces.AreaService;
+import ru.ibs.project.vacancyApp.dto.frontDTO.CityByVacanciesFrontDTO;
+import ru.ibs.project.vacancyApp.dto.frontDTO.RegionByVacanciesFrontDTO;
 
 import java.util.*;
 
@@ -34,7 +36,7 @@ public class AreaServiceImpl implements AreaService {
             List<Long> listSalary = new ArrayList<>();
             for (Area area : areas) {
                 countVacancies += area.getVacancyAreas().stream().count();
-                createListSalary(area, listSalary);
+                createListSalaryForVacancies(area, listSalary);
             }
             if (!listSalary.isEmpty()) {
                 medianValue = findMedianValueByListSalary(listSalary);
@@ -47,11 +49,37 @@ public class AreaServiceImpl implements AreaService {
         return regionByVacanciesFrontDTOList;
     }
 
+    @Override
+    public List<RegionByResumesFrontDTO> createListAllRegionsInfoByResumes() {
+        Set<String> allRegions = areaRepository.readDistinctByNameRegion();
+        List<RegionByResumesFrontDTO> regionByResumesFrontDTOList = new ArrayList<>();
+        for (String region : allRegions) {
+            Long medianValue = null;
+            Long fromSalary = null;
+            Long toSalary = null;
+            Long countResumes = 0L;
+            List<Area> areas = areaRepository.findAllByNameRegion(region);
+            Long countCities = areas.stream().count();
+            List<Long> listSalaryResumes = new ArrayList<>();
+            for (Area area : areas) {
+                countResumes += area.getResumes().stream().count();
+                createListSalaryForResumes(area, listSalaryResumes);
+            }
+            if (!listSalaryResumes.isEmpty()) {
+                medianValue = findMedianValueByListSalary(listSalaryResumes);
+                fromSalary = Collections.min(listSalaryResumes);
+                toSalary = Collections.max(listSalaryResumes);
+            }
+            regionByResumesFrontDTOList.add(new RegionByResumesFrontDTO(region, countCities, countResumes, fromSalary, toSalary, medianValue));
+        }
+        log.info("regions: " + regionByResumesFrontDTOList.size());
+        return regionByResumesFrontDTOList;
+    }
 
     @Override
-    public List<CityByVacanciesFrontDTO> createListAllCitiesInfoByVacancies() {  //+
+    public List<CityByVacanciesFrontDTO> createListAllCitiesInfoByVacancies() {
         List<Area> areaList = (List<Area>) areaRepository.findAll();
-        List<CityByVacanciesFrontDTO> cityByVacanciesFrontDTOList = new ArrayList<>();
+        List<CityByVacanciesFrontDTO> citiesByVacanciesFrontDTO = new ArrayList<>();
         for (Area area : areaList) {
             Long medianValue = null;
             Long fromSalary = null;
@@ -59,42 +87,56 @@ public class AreaServiceImpl implements AreaService {
             String nameCity = area.getNameCity();
             String nameRegion = area.getNameRegion();
             Long countVacancies = area.getVacancyAreas().stream().count();
-            List<Long> listSalary = new ArrayList<>();
-            createListSalary(area, listSalary);
-            if (!listSalary.isEmpty()) {
-                medianValue = findMedianValueByListSalary(listSalary);
-                fromSalary = Collections.min(listSalary);
-                toSalary = Collections.max(listSalary);
+            List<Long> listSalaryVacancies = new ArrayList<>();
+            createListSalaryForVacancies(area, listSalaryVacancies);
+            if (!listSalaryVacancies.isEmpty()) {
+                medianValue = findMedianValueByListSalary(listSalaryVacancies);
+                fromSalary = Collections.min(listSalaryVacancies);
+                toSalary = Collections.max(listSalaryVacancies);
             }
-            cityByVacanciesFrontDTOList.add(new CityByVacanciesFrontDTO(nameCity, nameRegion, countVacancies, fromSalary, toSalary, medianValue));
+            citiesByVacanciesFrontDTO.add(new CityByVacanciesFrontDTO(nameCity, nameRegion, countVacancies, fromSalary, toSalary, medianValue));
         }
-        log.info("cities " + cityByVacanciesFrontDTOList.size());
-        return cityByVacanciesFrontDTOList;
+        log.info("cities " + citiesByVacanciesFrontDTO.size());
+        return citiesByVacanciesFrontDTO;
     }
-
 
     @Override
     public List<CityByResumesFrontDTO> createListAllCitiesInfoByResumes() {
         List<Area> areaList = (List<Area>) areaRepository.findAll();
-        List<CityByResumesFrontDTO> cityByResumesFrontDTOS = new ArrayList<>();
-        for (Area area:areaList){
+        List<CityByResumesFrontDTO> citiesByResumesFrontDTO = new ArrayList<>();
+        for (Area area : areaList) {
             Long medianValue = null;
             Long fromSalary = null;
             Long toSalary = null;
             String nameCity = area.getNameCity();
             String nameRegion = area.getNameRegion();
             Long countResumes = area.getResumes().stream().count();
-
+            List<Long> listSalaryResume = new ArrayList<>();
+            createListSalaryForResumes(area, listSalaryResume);
+            if (!listSalaryResume.isEmpty()) {
+                medianValue = findMedianValueByListSalary(listSalaryResume);
+                fromSalary = Collections.min(listSalaryResume);
+                toSalary = Collections.max(listSalaryResume);
+            }
+            citiesByResumesFrontDTO.add(new CityByResumesFrontDTO(nameCity, nameRegion, countResumes, fromSalary, toSalary, medianValue));
         }
-
-
-
-
-
-        return null;
+        log.info("cities " + citiesByResumesFrontDTO.size());
+        return citiesByResumesFrontDTO;
     }
 
-    private void createListSalary(Area area, List<Long> listSalary) {
+    private void createListSalaryForResumes(Area area, List<Long> listSalary) {
+        Set<Resume> resumeSet = area.getResumes();
+        for (Resume resume : resumeSet) {
+            if (resume.getSalaryValue() != null) {
+                Long salaryRUB = convertCurrencyToRUR(resume.getSalaryCurrency(), resume.getSalaryValue());
+                listSalary.add(salaryRUB);
+            }
+        }
+
+    }
+
+
+    private void createListSalaryForVacancies(Area area, List<Long> listSalary) {
         Set<VacancyArea> vacancyAreaSet = area.getVacancyAreas();
         for (VacancyArea vacancyArea : vacancyAreaSet) {
             if (vacancyArea.getFromSalary() != null) {

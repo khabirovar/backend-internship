@@ -24,7 +24,6 @@ public class ConvertItemDTOCallableClass implements Callable<VacancyArea> {
         this.itemDTO = itemDTO;
     }
 
-
     @Override
     public VacancyArea call() {
         log.info("start thread " + Thread.currentThread().getId());

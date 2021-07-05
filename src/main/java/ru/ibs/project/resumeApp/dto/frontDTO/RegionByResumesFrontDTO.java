@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CityByResumesFrontDTO {
-    private String nameCity;
+public class RegionByResumesFrontDTO {
     private String nameRegion;
-    private Long countResume;
+    private Long countCities;
+    private Long countResumes;
     private Long minSalary;
     private Long maxSalary;
     private Long medianValue;
