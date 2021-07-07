@@ -51,17 +51,6 @@ public class ManipulationDataVacancyController {
         return requestDTO;
     }
 
-
-    @PostMapping("create-and-delete")
-    public DownloadRequestDTO createAndDelete(@RequestBody DownloadRequestDTO requestDTO) throws ExecutionException, InterruptedException {
-        dataManipulationService.deleteVacancyArea();
-        dataManipulationService.deleteAreaAndVacancy();
-        Set<ItemDTO> vacanciesDTO = downloadFromHHServiceVacancy.downloadAllItemDTOsByDownloadRequestDTO(requestDTO);
-        dataManipulationService.createAllVacancies(vacanciesDTO);
-        vacanciesDTO.clear();
-        return requestDTO;
-    }
-
     @GetMapping("delete")
     public void delete() {
         dataManipulationService.deleteVacancyArea();

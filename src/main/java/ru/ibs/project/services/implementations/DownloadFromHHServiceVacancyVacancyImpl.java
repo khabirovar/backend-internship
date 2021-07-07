@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import ru.ibs.project.services.interfaces.DownloadFromHHServiceVacancy;
 import ru.ibs.project.vacancyApp.dto.frontDTO.DownloadRequestDTO;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.ItemDTO;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respAllVacanciesDTOs.MainResponseVacanciesHHDTO;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respDictionaryDTOs.RegionDTO;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respDictionaryDTOs.ResponseCountryHHDTO;
 import ru.ibs.project.vacancyApp.dto.hhDTO.respVacancyDTOs.ResponseVacancyHHDTO;
-import ru.ibs.project.services.interfaces.DownloadFromHHServiceVacancy;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -46,7 +46,7 @@ public class DownloadFromHHServiceVacancyVacancyImpl implements DownloadFromHHSe
         url += "?text=" + downloadRequestDTO.getName() + "&per_page=100&search_field=name";
         if (!StringUtils.isEmpty(downloadRequestDTO.getOrderBy()))
             url += "&order_by=publication_time";
-        if (downloadRequestDTO.getOnlyWithSalary())
+        if (downloadRequestDTO.getOnlyWithSalary() != null && downloadRequestDTO.getOnlyWithSalary())
             url += "&only_with_salary=true";
         MainResponseVacanciesHHDTO mainResponseVacanciesHHDTO = restTemplate.getForObject(url, MainResponseVacanciesHHDTO.class);
         log.info("found " + mainResponseVacanciesHHDTO.getFound() + " vacancies");
