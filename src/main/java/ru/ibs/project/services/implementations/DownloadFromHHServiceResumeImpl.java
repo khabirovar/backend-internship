@@ -58,7 +58,8 @@ public class DownloadFromHHServiceResumeImpl implements DownloadFromHHServiceRes
     public Set<ResumeDTO> downloadAllResumeById(List<String> listIdResume) {
         Set<ResumeDTO> resumeDTOSet = new LinkedHashSet<>();
         for (String idResume : listIdResume) {
-            String url = URL_RESUMES + '/' + idResume;
+//            String url = URL_RESUMES + '/' + idResume;
+            String url = URL_RESUMES + "/12345678901234567890123456789012abcdef";
             ResumeDTO resumeDTO = restTemplate.getForObject(url, ResumeDTO.class);
             resumeDTOSet.add(resumeDTO);
         }
