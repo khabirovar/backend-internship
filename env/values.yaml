@@ -3,6 +3,9 @@ replicaCount: 1
 strategy: 
     type: Recreate
 
+haproxy:
+    timeout: 600s
+
 image:
     repository: docker.trainee.ru.com/CI_PROJECT_NAME
     pullPolicy: Always
@@ -28,7 +31,8 @@ service:
 ingress:
     enabled: true
     className: ""
-    annotations: {} 
+    annotations:
+        haproxy.router.openshift.io/timeout: 600s
     hosts:
         - host: CI_PROJECT_NAME.apps.ocp4.trainee.ru.com
           paths:
