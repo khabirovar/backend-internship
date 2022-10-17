@@ -10,9 +10,9 @@ stages:
 
 variables:
     PROJECT_NAME: group10-back
-    DOCKER_REPO: docker.trainee.ru.com
+    DOCKER_REPO: docker.example.com
     HELM_REPO: helm-group10-back
-    HELM_REPO_URL: https://repo.trainee.ru.com/repository/helm
+    HELM_REPO_URL: https://repo.example.com/repository/helm
     HELM_EXPERIMENTAL_OCI: 1
 
 
